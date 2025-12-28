@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>VIRAL LINK</title>
 
 <style>
 /* ================= RESET ================= */
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{
+  width:100%;
   height:100%;
   background:#020504;
   color:#eafff4;
@@ -19,45 +20,64 @@ html,body{
 /* ================= VARIABLES ================= */
 :root{
   --green:#3cff9e;
-  --green-dim:rgba(60,255,158,.25);
-  --panel:#0b1512;
-  --glass:rgba(18,36,28,.75);
+  --green-glow:rgba(60,255,158,.45);
+  --dark:#020504;
 }
 
-/* ================= INTRO ================= */
+/* ================= INTRO SCENE ================= */
 #intro{
   position:fixed;
   inset:0;
+  z-index:100;
   background:
-    radial-gradient(circle at 50% 30%, #123d2c, #020504 70%);
+    radial-gradient(circle at 50% 30%, #1b5b41, #020504 70%);
   display:flex;
-  flex-direction:column;
   align-items:center;
   justify-content:center;
-  z-index:10;
-  transition:opacity .6s ease, transform .6s ease;
+  flex-direction:column;
+  animation:introFadeIn 1.2s ease forwards;
 }
-#intro.hidden{
-  opacity:0;
-  transform:scale(1.05);
-  pointer-events:none;
+
+@keyframes introFadeIn{
+  from{opacity:0;transform:scale(1.1)}
+  to{opacity:1;transform:scale(1)}
 }
+
+#intro .pulse{
+  width:160px;
+  height:160px;
+  border-radius:50%;
+  background:radial-gradient(circle,var(--green),transparent 70%);
+  animation:pulse 2s infinite;
+  filter:blur(2px);
+}
+
+@keyframes pulse{
+  0%{transform:scale(.8);opacity:.4}
+  50%{transform:scale(1.1);opacity:.9}
+  100%{transform:scale(.8);opacity:.4}
+}
+
 #intro h1{
-  letter-spacing:4px;
-  font-size:38px;
+  margin-top:40px;
+  letter-spacing:6px;
+  font-size:36px;
 }
+
 #intro p{
   opacity:.6;
-  margin:14px 0 34px;
+  margin:14px 0 36px;
 }
+
 #intro button{
-  padding:16px 36px;
-  border-radius:18px;
+  padding:18px 40px;
+  border-radius:20px;
   border:none;
-  font-weight:900;
   background:linear-gradient(135deg,var(--green),#00e7b3);
   color:#002014;
-  box-shadow:0 0 40px var(--green-dim);
+  font-weight:900;
+  font-size:15px;
+  box-shadow:0 0 60px var(--green-glow);
 }
 
 /* ================= APP ================= */
@@ -65,7 +85,9 @@ html,body{
   height:100%;
   overflow-y:auto;
   scroll-snap-type:y mandatory;
+  display:none;
 }
+
 .section{
   min-height:100%;
   padding:22px;
@@ -74,29 +96,26 @@ html,body{
   flex-direction:column;
 }
 
-/* ================= CARDS ================= */
+/* ================= STATUS ================= */
 .card{
   margin-top:auto;
   background:linear-gradient(180deg,#122720,#060b09);
-  border-radius:28px;
+  border-radius:30px;
   padding:22px;
   box-shadow:
     inset 0 0 0 1px rgba(255,255,255,.05),
-    0 30px 80px rgba(0,0,0,.8);
+    0 40px 100px rgba(0,0,0,.9);
 }
-.label{
-  font-size:12px;
-  opacity:.45;
-}
+
+.label{font-size:12px;opacity:.45}
 .value{
-  margin-top:6px;
   font-size:22px;
   font-weight:800;
   color:var(--green);
   letter-spacing:1px;
+  margin-top:6px;
 }
 
-/* ================= STATS ================= */
 .stats{
   display:flex;
   gap:12px;
@@ -104,24 +123,19 @@ html,body{
 }
 .stat{
   flex:1;
-  padding:16px;
   background:rgba(255,255,255,.04);
   border-radius:18px;
+  padding:16px;
   text-align:center;
 }
-.stat b{
-  display:block;
-  font-size:22px;
-}
-.stat small{
-  opacity:.5;
-}
+.stat b{font-size:22px}
+.stat small{opacity:.5}
 
 /* ================= PLAY ================= */
 .play{
   margin-top:auto;
   height:260px;
-  border-radius:32px;
+  border-radius:34px;
   background:
     radial-gradient(circle at center,#1a5a3f,#050908);
   display:flex;
@@ -131,23 +145,21 @@ html,body{
   letter-spacing:2px;
   box-shadow:
     inset 0 0 0 1px rgba(255,255,255,.06),
-    0 40px 90px rgba(0,0,0,.85);
-  transition:transform .12s ease, box-shadow .12s ease;
+    0 50px 120px rgba(0,0,0,.95);
+  transition:.15s;
 }
 .play:active{
-  transform:scale(.97);
-  box-shadow:0 0 70px var(--green-dim);
+  transform:scale(.96);
+  box-shadow:0 0 80px var(--green-glow);
 }
 
 /* ================= NAV ================= */
 .nav{
   position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  height:74px;
-  background:rgba(6,12,10,.88);
-  backdrop-filter:blur(16px);
+  bottom:0;left:0;right:0;
+  height:76px;
+  background:rgba(6,12,10,.9);
+  backdrop-filter:blur(18px);
   display:flex;
   border-top:1px solid rgba(255,255,255,.06);
 }
@@ -161,12 +173,8 @@ html,body{
 }
 
 /* ================= FX ================= */
-.bump{
-  animation:bump .3s ease;
-}
-@keyframes bump{
-  50%{transform:scale(1.18)}
-}
+.bump{animation:bump .3s ease}
+@keyframes bump{50%{transform:scale(1.2)}}
 </style>
 </head>
 
@@ -174,85 +182,78 @@ html,body{
 
 <!-- INTRO -->
 <div id="intro">
+  <div class="pulse"></div>
   <h1>VIRAL LINK</h1>
-  <p>Turn the link into a virus</p>
-  <button id="enterBtn">ENTER</button>
+  <p>you are part of the chain</p>
+  <button id="enter">ENTER</button>
 </div>
 
 <!-- APP -->
 <div id="app">
 
-  <!-- STATUS -->
-  <section class="section">
-    <h2>INFECTION STATUS</h2>
-    <div class="card">
-      <div class="label">INFECTION ID</div>
-      <div class="value" id="uid"></div>
+<section class="section">
+  <h2>INFECTION STATUS</h2>
+  <div class="card">
+    <div class="label">INFECTION ID</div>
+    <div class="value" id="uid"></div>
 
-      <div class="stats">
-        <div class="stat">
-          <small>INFECTED</small>
-          <b id="count">0</b>
-        </div>
-        <div class="stat">
-          <small>RANK</small>
-          <b>#—</b>
-        </div>
-        <div class="stat">
-          <small>SKIN</small>
-          <b>CLASSIC</b>
-        </div>
+    <div class="stats">
+      <div class="stat">
+        <small>INFECTED</small>
+        <b id="count">0</b>
+      </div>
+      <div class="stat">
+        <small>RANK</small>
+        <b>#—</b>
+      </div>
+      <div class="stat">
+        <small>STATE</small>
+        <b>ACTIVE</b>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- PLAY -->
-  <section class="section">
-    <h2>PLAY</h2>
-    <div class="play" id="playBtn">TAP TO INFECT</div>
-  </section>
+<section class="section">
+  <h2>PLAY</h2>
+  <div class="play" id="infect">TAP TO INFECT</div>
+</section>
 
-  <!-- RANKS -->
-  <section class="section">
-    <h2>RANKS</h2>
-    <div class="card">Global leaderboard (soon).</div>
-  </section>
+<section class="section">
+  <h2>CHAIN</h2>
+  <div class="card">You are inside a growing infection chain.</div>
+</section>
 
-  <!-- PROFILE -->
-  <section class="section">
-    <h2>PROFILE</h2>
-    <div class="card">Bio, stats, links.</div>
-  </section>
+<section class="section">
+  <h2>PROFILE</h2>
+  <div class="card">Identity locked to this device.</div>
+</section>
 
 </div>
 
-<!-- NAV -->
 <div class="nav">
   <button data-i="0">STATUS</button>
   <button data-i="1">PLAY</button>
-  <button data-i="2">RANKS</button>
+  <button data-i="2">CHAIN</button>
   <button data-i="3">ME</button>
 </div>
 
 <script>
-/* ================= STATE ================= */
 const uid = localStorage.uid ||
   ('VL-' + Math.random().toString(36).slice(2,10).toUpperCase());
 localStorage.uid = uid;
 
 let count = +localStorage.count || 0;
 
-/* ================= INIT ================= */
 document.getElementById('uid').textContent = uid;
 document.getElementById('count').textContent = count;
 
-/* ================= INTRO ================= */
-document.getElementById('enterBtn').onclick = ()=>{
-  document.getElementById('intro').classList.add('hidden');
+document.getElementById('enter').onclick = ()=>{
+  document.getElementById('intro').style.display='none';
+  document.getElementById('app').style.display='block';
 };
 
-/* ================= PLAY ================= */
-document.getElementById('playBtn').onclick = ()=>{
+document.getElementById('infect').onclick = ()=>{
   count++;
   localStorage.count = count;
   const el = document.getElementById('count');
@@ -261,12 +262,9 @@ document.getElementById('playBtn').onclick = ()=>{
   setTimeout(()=>el.classList.remove('bump'),300);
 };
 
-/* ================= NAV ================= */
-document.querySelectorAll('.nav button').forEach(btn=>{
-  btn.onclick = ()=>{
-    document.querySelectorAll('.section')[btn.dataset.i]
-      .scrollIntoView({behavior:'smooth'});
-  };
+document.querySelectorAll('.nav button').forEach(b=>{
+  b.onclick=()=>document.querySelectorAll('.section')[b.dataset.i]
+    .scrollIntoView({behavior:'smooth'});
 });
 </script>
 
