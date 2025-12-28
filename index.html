@@ -1,575 +1,280 @@
-<!doctype html>
-<html lang="ru">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover"/>
-  <meta name="theme-color" content="#07090c"/>
-  <title>Viral Link</title>
-  <style>
-    :root{
-      --bg:#07090c; --card:rgba(255,255,255,.06); --stroke:rgba(255,255,255,.12);
-      --bio:#20ff9a; --cyan:#31d7ff; --pink:#ff2f6d; --gold:#ffd56a;
-      --text:rgba(255,255,255,.92); --muted:rgba(255,255,255,.65);
-      --r:22px; --pad:14px;
-      --safeTop: env(safe-area-inset-top, 0px);
-      --safeBottom: env(safe-area-inset-bottom, 0px);
-      --shadow: 0 18px 60px rgba(0,0,0,.55);
-    }
-    *{box-sizing:border-box} html,body{height:100%; margin:0; background:var(--bg); color:var(--text); font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial}
-    body{overflow:hidden; -webkit-tap-highlight-color:transparent; user-select:none}
-    @media (min-width: 820px) and (min-height: 520px){
-      body:before{
-        content:"Mobile only. Open on phone (vertical).";
-        position:fixed; inset:0; display:grid; place-items:center;
-        background:#05070a; color:rgba(255,255,255,.8); font-weight:800; z-index:99999;
-      }
-    }
+<!doctype html><html lang="ru"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07090c"><title>Viral Link</title>
+<style>
+:root{--bg:#07090c;--t:rgba(255,255,255,.92);--m:rgba(255,255,255,.62);--b:#20ff9a;--c:#31d7ff;--p:#ff2f6d;--g:#ffd56a;--r:22px;--pad:14px;--st:rgba(255,255,255,.12);--sh:0 18px 60px rgba(0,0,0,.55);--safeT:env(safe-area-inset-top,0px);--safeB:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}html,body{height:100%;margin:0;background:var(--bg);color:var(--t);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial}
+body{overflow:hidden;-webkit-tap-highlight-color:transparent;user-select:none}
+@media(min-width:820px) and (min-height:520px){body:before{content:"Mobile only • Open on phone (vertical)";position:fixed;inset:0;display:grid;place-items:center;background:#05070a;color:rgba(255,255,255,.8);font-weight:900;z-index:99999}}
+.bg{position:fixed;inset:0;background:
+radial-gradient(1100px 700px at 50% 0%, rgba(32,255,154,.14), transparent 55%),
+radial-gradient(900px 700px at 10% 50%, rgba(49,215,255,.12), transparent 55%),
+radial-gradient(1000px 700px at 90% 60%, rgba(255,47,109,.10), transparent 60%),
+linear-gradient(180deg,#05070a,#07090c 35%,#06070a)}
+.noise{position:absolute;inset:0;opacity:.06;mix-blend-mode:overlay;pointer-events:none;
+background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.25'/%3E%3C/svg%3E")}
+.app{position:fixed;inset:0;display:flex;flex-direction:column;gap:10px;padding-top:calc(10px + var(--safeT));padding-bottom:calc(10px + var(--safeB))}
+.top{padding:0 var(--pad);display:flex;align-items:center;justify-content:space-between;gap:10px;z-index:2}
+.brand{display:flex;align-items:center;gap:10px}
+.sigil{width:38px;height:38px;border-radius:14px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.16);box-shadow:var(--sh);
+background:radial-gradient(circle at 30% 30%, rgba(32,255,154,.85), rgba(32,255,154,0) 60%),
+radial-gradient(circle at 70% 60%, rgba(49,215,255,.65), rgba(49,215,255,0) 60%),
+linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.02))}
+.sigil:after{content:"";position:absolute;inset:-70%;filter:blur(10px);opacity:.95;animation:spin 6s linear infinite;
+background:conic-gradient(from 210deg, rgba(32,255,154,0), rgba(32,255,154,.26), rgba(49,215,255,0), rgba(255,47,109,.18), rgba(32,255,154,0))}
+@keyframes spin{to{transform:rotate(360deg)}}
+.title{font-weight:950;letter-spacing:.7px;font-size:14px}
+.sub{font-size:11px;color:var(--m)}
+.pill{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);backdrop-filter:blur(10px)}
+.dot{width:10px;height:10px;border-radius:99px;background:radial-gradient(circle at 30% 30%, var(--b), rgba(32,255,154,.25));box-shadow:0 0 18px rgba(32,255,154,.35)}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;letter-spacing:.6px;font-size:11px}
+.panel{margin:0 var(--pad);border-radius:28px;overflow:hidden;flex:1;display:flex;flex-direction:column;position:relative;z-index:2;
+background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.12);box-shadow:var(--sh);backdrop-filter:blur(12px)}
+.home{padding:14px;display:flex;flex-direction:column;gap:12px}
+.hero{padding:16px;border-radius:22px;border:1px solid rgba(255,255,255,.14);
+background:radial-gradient(700px 260px at 20% 10%, rgba(32,255,154,.18), transparent 60%),
+radial-gradient(700px 260px at 80% 30%, rgba(49,215,255,.12), transparent 65%),
+linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04))}
+.hero h1{margin:0 0 6px;font-size:18px}
+.hero p{margin:0;color:rgba(255,255,255,.72);font-size:12.5px;line-height:1.35}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);font-size:12px}
+.btn{border:none;outline:none;width:100%;padding:14px;border-radius:18px;font-weight:950;color:rgba(0,0,0,.92);position:relative;overflow:hidden;transform:translateZ(0);
+background:radial-gradient(140% 140% at 20% 20%, rgba(255,255,255,.55), rgba(255,255,255,0) 38%),
+linear-gradient(90deg, rgba(32,255,154,1), rgba(49,215,255,1));
+box-shadow:0 16px 40px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.20) inset, 0 0 40px rgba(32,255,154,.20)}
+.btn:active{transform:scale(.985)}
+.btn.secondary{color:rgba(255,255,255,.92);background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.12)}
+.btn.danger{color:rgba(255,255,255,.92);background:linear-gradient(90deg, rgba(255,47,109,1), rgba(255,144,99,1));
+box-shadow:0 16px 40px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.16) inset, 0 0 40px rgba(255,47,109,.20)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.small{font-size:11px;color:rgba(255,255,255,.62);text-align:center}
+.gameWrap{flex:1;display:none;position:relative;background:rgba(0,0,0,.10)}
+#phaser{position:absolute;inset:0}
+.hud{position:absolute;left:12px;right:12px;top:12px;display:flex;gap:8px;z-index:6}
+.hud .h{flex:1;padding:10px 12px;border-radius:16px;background:rgba(0,0,0,.34);border:1px solid rgba(255,255,255,.12);display:flex;justify-content:space-between;align-items:center;font-size:12px}
+.bottom{padding:10px var(--pad);display:flex;gap:10px;background:rgba(0,0,0,.10)}
+.nav{flex:1;padding:12px 10px;border-radius:18px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.05);color:rgba(255,255,255,.78);font-weight:950}
+.nav.active{color:rgba(0,0,0,.90);background:linear-gradient(90deg, rgba(32,255,154,.95), rgba(49,215,255,.95))}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + var(--safeB));
+padding:10px 12px;border-radius:16px;background:rgba(0,0,0,.74);border:1px solid rgba(255,255,255,.14);box-shadow:0 18px 50px rgba(0,0,0,.55);
+opacity:0;transition:.18s;z-index:9999;max-width:92vw;font-size:12px}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(-4px)}
+/* INTRO */
+.intro{position:fixed;inset:0;z-index:9998;display:flex;align-items:center;justify-content:center}
+.intro video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.intro:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.85),rgba(0,0,0,.25),rgba(0,0,0,.88))}
+.introCard{position:relative;width:min(520px,92vw);border-radius:26px;padding:18px;border:1px solid rgba(255,255,255,.14);box-shadow:var(--sh);
+background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));backdrop-filter:blur(10px)}
+.introCard h2{margin:0 0 6px;font-size:18px;letter-spacing:.3px}
+.introCard p{margin:0;color:rgba(255,255,255,.70);font-size:12.5px;line-height:1.35}
+.bar{height:8px;border-radius:999px;background:rgba(255,255,255,.10);margin-top:12px;overflow:hidden;border:1px solid rgba(255,255,255,.10)}
+.bar > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--b),var(--c));box-shadow:0 0 30px rgba(32,255,154,.25)}
+.fade{animation:fade .25s ease forwards}@keyframes fade{to{opacity:0;transform:scale(1.01)}}
+</style></head><body>
+<div class="bg"><div class="noise"></div></div>
 
-    /* Background */
-    .bg{
-      position:fixed; inset:0; overflow:hidden;
-      background:
-        radial-gradient(1100px 700px at 50% 0%, rgba(32,255,154,.15), transparent 55%),
-        radial-gradient(900px 700px at 10% 50%, rgba(49,215,255,.12), transparent 55%),
-        radial-gradient(1000px 700px at 90% 60%, rgba(255,47,109,.10), transparent 60%),
-        linear-gradient(180deg, #05070a, #07090c 35%, #06070a);
-    }
-    .bg video{
-      position:absolute; inset:-10%;
-      width:120%; height:120%;
-      object-fit:cover;
-      opacity:.14;
-      filter:saturate(1.1) contrast(1.05);
-      pointer-events:none;
-    }
-    .noise{
-      position:absolute; inset:0;
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.25'/%3E%3C/svg%3E");
-      opacity:.06; mix-blend-mode:overlay; pointer-events:none;
-    }
+<div class="intro" id="intro">
+  <video id="introVid" autoplay muted playsinline webkit-playsinline>
+    <source src="assets/intro.webm" type="video/webm">
+    <source src="assets/intro.mp4" type="video/mp4">
+  </video>
+  <div class="introCard">
+    <h2>VIRAL LINK</h2>
+    <p>Твоя ссылка — вирус. Игрок заходит по <span class="mono">?ref=ID</span> → ты получаешь +1.</p>
+    <div class="bar"><i id="bar"></i></div>
+    <div class="row2" style="margin-top:12px">
+      <button class="btn" id="startBtn">START</button>
+      <button class="btn secondary" id="skipBtn">SKIP</button>
+    </div>
+    <div class="small" style="margin-top:8px">Нажми START, чтобы включить звук (автоплей часто блокируется).</div>
+  </div>
+</div>
 
-    /* App shell */
-    .app{
-      position:fixed; inset:0;
-      display:flex; flex-direction:column;
-      padding-top:calc(10px + var(--safeTop));
-      padding-bottom:calc(10px + var(--safeBottom));
-      gap:10px;
-    }
-    .top{
-      padding: 0 var(--pad);
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-    }
-    .brand{
-      display:flex; align-items:center; gap:10px;
-    }
-    .sigil{
-      width:38px; height:38px; border-radius:14px;
-      background:
-        radial-gradient(circle at 30% 30%, rgba(32,255,154,.85), rgba(32,255,154,0) 60%),
-        radial-gradient(circle at 70% 60%, rgba(49,215,255,.65), rgba(49,215,255,0) 60%),
-        linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.02));
-      border:1px solid rgba(255,255,255,.16);
-      box-shadow: var(--shadow);
-      position:relative; overflow:hidden;
-    }
-    .sigil:after{
-      content:""; position:absolute; inset:-60%;
-      background: conic-gradient(from 210deg, rgba(32,255,154,0), rgba(32,255,154,.25), rgba(49,215,255,0), rgba(255,47,109,.18), rgba(32,255,154,0));
-      filter: blur(8px);
-      animation:spin 6s linear infinite;
-      opacity:.95;
-    }
-    @keyframes spin{to{transform:rotate(360deg)}}
-    .title{font-weight:900; letter-spacing:.6px; font-size:14px}
-    .sub{font-size:11px; color:var(--muted)}
-    .pill{
-      display:flex; align-items:center; gap:8px;
-      padding:9px 12px; border-radius:999px;
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.10);
-      backdrop-filter: blur(10px);
-    }
-    .dot{width:10px; height:10px; border-radius:99px; background: radial-gradient(circle at 30% 30%, var(--bio), rgba(32,255,154,.25)); box-shadow: 0 0 18px rgba(32,255,154,.35)}
-    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; letter-spacing:.6px; font-size:11px}
-
-    .panel{
-      margin:0 var(--pad);
-      border-radius: 28px;
-      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(12px);
-      overflow:hidden;
-      flex:1;
-      display:flex;
-      flex-direction:column;
-    }
-
-    .home{
-      padding:14px;
-      display:flex; flex-direction:column; gap:12px;
-    }
-    .hero{
-      padding:16px;
-      border-radius: 22px;
-      background:
-        radial-gradient(700px 260px at 20% 10%, rgba(32,255,154,.18), transparent 60%),
-        radial-gradient(700px 260px at 80% 30%, rgba(49,215,255,.12), transparent 65%),
-        linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
-      border:1px solid rgba(255,255,255,.14);
-    }
-    .hero h1{margin:0 0 6px; font-size:18px}
-    .hero p{margin:0; color:rgba(255,255,255,.72); font-size:12.5px; line-height:1.35}
-    .chips{display:flex; flex-wrap:wrap; gap:8px}
-    .chip{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:8px 10px; border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-      font-size:12px;
-    }
-
-    .btn{
-      border:none; outline:none; width:100%;
-      padding: 14px 14px;
-      border-radius: 18px;
-      font-weight: 900;
-      color: rgba(0,0,0,.92);
-      background:
-        radial-gradient(140% 140% at 20% 20%, rgba(255,255,255,.55), rgba(255,255,255,0) 38%),
-        linear-gradient(90deg, rgba(32,255,154,1), rgba(49,215,255,1));
-      box-shadow: 0 16px 40px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.20) inset, 0 0 40px rgba(32,255,154,.20);
-      position:relative; overflow:hidden;
-      transform: translateZ(0);
-    }
-    .btn:active{transform:scale(.985)}
-    .btn.secondary{
-      color:rgba(255,255,255,.92);
-      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
-      border:1px solid rgba(255,255,255,.12);
-    }
-    .btn.danger{
-      color:rgba(255,255,255,.92);
-      background: linear-gradient(90deg, rgba(255,47,109,1), rgba(255,144,99,1));
-      box-shadow: 0 16px 40px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.16) inset, 0 0 40px rgba(255,47,109,.20);
-    }
-    .row2{display:grid; grid-template-columns:1fr 1fr; gap:10px}
-
-    /* Game view */
-    .gameWrap{flex:1; display:none; position:relative}
-    #phaser{position:absolute; inset:0}
-    .hud{
-      position:absolute; left:12px; right:12px; top:12px;
-      display:flex; gap:8px; z-index:5;
-    }
-    .hud .h{
-      flex:1;
-      padding:10px 12px;
-      border-radius:16px;
-      background: rgba(0,0,0,.32);
-      border:1px solid rgba(255,255,255,.12);
-      display:flex; justify-content:space-between; align-items:center;
-      font-size:12px;
-    }
-
-    .bottom{
-      padding: 10px var(--pad);
-      display:flex; gap:10px;
-      background: rgba(0,0,0,.10);
-    }
-    .navBtn{
-      flex:1;
-      padding: 12px 10px;
-      border-radius: 18px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
-      color: rgba(255,255,255,.75);
-      font-weight:900;
-    }
-    .navBtn.active{
-      color: rgba(0,0,0,.90);
-      background: linear-gradient(90deg, rgba(32,255,154,.95), rgba(49,215,255,.95));
-    }
-    .toast{
-      position:fixed; left:50%; transform:translateX(-50%);
-      bottom: calc(84px + var(--safeBottom));
-      padding: 10px 12px;
-      border-radius: 16px;
-      background: rgba(0,0,0,.70);
-      border:1px solid rgba(255,255,255,.14);
-      box-shadow: 0 18px 50px rgba(0,0,0,.55);
-      opacity:0; transition:.18s;
-      z-index:9999; max-width: 92vw;
-      font-size:12px;
-    }
-    .toast.show{opacity:1; transform:translateX(-50%) translateY(-4px)}
-  </style>
-</head>
-<body>
-  <div class="bg">
-    <video autoplay muted loop playsinline webkit-playsinline>
-      <source src="assets/intro.mp4" type="video/mp4"/>
-    </video>
-    <div class="noise"></div>
+<div class="app">
+  <div class="top">
+    <div class="brand"><div class="sigil"></div><div><div class="title">VIRAL LINK</div><div class="sub">Infect • Rise • Rule</div></div></div>
+    <div class="pill"><div class="dot"></div><div style="font-size:11px;color:var(--m)">ID</div><div class="mono" id="myId">—</div></div>
   </div>
 
-  <div class="app">
-    <div class="top">
-      <div class="brand">
-        <div class="sigil"></div>
-        <div>
-          <div class="title">VIRAL LINK</div>
-          <div class="sub">Infect • Rise • Rule</div>
+  <div class="panel">
+    <div class="home" id="home">
+      <div class="hero">
+        <h1>Твоя ссылка — вирус.</h1>
+        <p>Шарь <b>вирус-ссылку</b> + заражай людей в игре. Это ускоряет твой рост.</p>
+        <div class="chips">
+          <span class="chip"><span class="mono">REF</span><b id="refLabel">—</b></span>
+          <span class="chip"><span class="mono">INFECTED</span><b id="infected">0</b></span>
+          <span class="chip"><span class="mono">FROM</span><b class="mono" id="from">—</b></span>
         </div>
       </div>
-      <div class="pill">
-        <div class="dot"></div>
-        <div style="font-size:11px; color:var(--muted)">ID</div>
-        <div class="mono" id="myId">—</div>
+
+      <button class="btn" id="play">PLAY • INFECT</button>
+
+      <div class="row2">
+        <button class="btn secondary" id="copy">COPY LINK</button>
+        <button class="btn secondary" id="share">SHARE</button>
       </div>
+
+      <div class="row2">
+        <button class="btn secondary" id="skinBtn">SKIN: classic</button>
+        <button class="btn secondary" id="rankBtn">LEADERBOARD</button>
+      </div>
+
+      <button class="btn danger" id="reset">RESET DEMO</button>
+      <div class="small">Демо хранится локально. Под бэкенд потом просто заменишь storage на API.</div>
     </div>
 
-    <div class="panel">
-      <div class="home" id="home">
-        <div class="hero">
-          <h1>Твоя ссылка — вирус.</h1>
-          <p>Игрок заходит по твоей ссылке → ты получаешь +1 в лидерборде. В игре заражай людей — это ускоряет рост.</p>
-          <div class="chips" style="margin-top:12px">
-            <span class="chip"><span class="mono">REF</span> <b id="refLabel">—</b></span>
-            <span class="chip"><span class="mono">INFECTED</span> <b id="infected">0</b></span>
-            <span class="chip"><span class="mono">FROM</span> <b class="mono" id="from">—</b></span>
-          </div>
-        </div>
-
-        <button class="btn" id="play">ИГРАТЬ • ЗАРАЖАТЬ</button>
-
-        <div class="row2">
-          <button class="btn secondary" id="copy">Copy Link</button>
-          <button class="btn secondary" id="share">Share</button>
-        </div>
-
-        <div class="row2">
-          <button class="btn secondary" id="skins">Skins</button>
-          <button class="btn secondary" id="rank">Leaderboard</button>
-        </div>
-
-        <button class="btn danger" id="chat">GLOBAL CHAT (Telegram)</button>
+    <div class="gameWrap" id="gameWrap">
+      <div class="hud">
+        <div class="h"><b>Score</b><span class="mono" id="score">0</span></div>
+        <div class="h"><b>Combo</b><span class="mono" id="combo">x1</span></div>
+        <div class="h"><b>Streak</b><span class="mono" id="streak">0</span></div>
       </div>
+      <div id="phaser"></div>
+    </div>
 
-      <div class="gameWrap" id="gameWrap">
-        <div class="hud">
-          <div class="h"><b>Score</b><span class="mono" id="score">0</span></div>
-          <div class="h"><b>Combo</b><span class="mono" id="combo">x1</span></div>
-          <div class="h"><b>Streak</b><span class="mono" id="streak">0</span></div>
-        </div>
-        <div id="phaser"></div>
-      </div>
-
-      <div class="bottom">
-        <button class="navBtn active" id="navHome">Home</button>
-        <button class="navBtn" id="navPlay">Play</button>
-        <button class="navBtn" id="navChat">Chat</button>
-      </div>
+    <div class="bottom">
+      <button class="nav active" id="navHome">HOME</button>
+      <button class="nav" id="navPlay">PLAY</button>
+      <button class="nav" id="navBack">BACK</button>
     </div>
   </div>
+</div>
 
-  <div class="toast" id="toast"></div>
+<div class="toast" id="toast"></div>
 
-  <script src="https://unpkg.com/phaser@3.70.0/dist/phaser.min.js"></script>
-  <script>
-    // --- tiny utils
-    const $ = (id)=>document.getElementById(id);
-    function toast(msg, ms=1400){
-      const t=$("toast"); t.textContent=msg; t.classList.add("show");
-      clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove("show"), ms);
-    }
-    const urlRe = /https?:\/\/[^\s]+|www\.[^\s]+|\b[\w.-]+\.[a-z]{2,}\b/ig;
+<script src="https://unpkg.com/phaser@3.70.0/dist/phaser.min.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const toast=(m,ms=1400)=>{const t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove("show"),ms)};
+const KEY="vl_min_v1";
+const SKINS=["classic","neon","toxic","void","gold"];
+const genId=()=>{const a="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let o="";for(let i=0;i<8;i++)o+=a[(Math.random()*a.length)|0];return o};
+const load=()=>{try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(s?.me?.id)return s}catch(e){} const s={me:{id:genId(),skin:"classic",infectedBy:null},players:{}};s.players[s.me.id]={infected:0};localStorage.setItem(KEY,JSON.stringify(s));return s};
+let state=load();
+const u=new URL(location.href),ref=u.searchParams.get("ref");
+if(ref && ref!==state.me.id && !state.me.infectedBy){state.me.infectedBy=ref;state.players[ref]=state.players[ref]||{infected:0};state.players[ref].infected++;localStorage.setItem(KEY,JSON.stringify(state));toast("INFECTED BY "+ref,1600)}
+const myRef=()=>{const base=location.origin+location.pathname;return `${base}?ref=${encodeURIComponent(state.me.id)}`};
+const render=()=>{$("myId").textContent=state.me.id;$("refLabel").textContent="?ref="+state.me.id;$("infected").textContent=String(state.players[state.me.id]?.infected||0);$("from").textContent=state.me.infectedBy||"—";$("skinBtn").textContent="SKIN: "+state.me.skin};
+render();
 
-    // --- state
-    const KEY="vl_simple_v1";
-    const SKINS=[
-      {id:"classic", src:"assets/skins/classic.png"},
-      {id:"neon", src:"assets/skins/neon.png"},
-      {id:"toxic", src:"assets/skins/toxic.png"},
-      {id:"void", src:"assets/skins/void.png"},
-      {id:"gold", src:"assets/skins/gold.png"},
-    ];
-    function genId(){ const a="ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; let o=""; for(let i=0;i<8;i++) o+=a[(Math.random()*a.length)|0]; return o; }
-    function load(){
-      try{ const s=JSON.parse(localStorage.getItem(KEY)||"null"); if(s?.me?.id) return s; }catch(e){}
-      const s={ me:{ id:genId(), skin:"classic", infectedBy:null, infected:0 }, players:{} };
-      s.players[s.me.id]={infected:0};
-      localStorage.setItem(KEY, JSON.stringify(s));
-      return s;
-    }
-    function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
-    const state = load();
+// intro control
+const intro=$("intro"),vid=$("introVid"),bar=$("bar");
+let startedAt=0;
+const tickBar=()=>{if(!intro) return; const d=vid.duration||0; if(d>0){bar.style.width=Math.min(100,(vid.currentTime/d)*100)+"%"} requestAnimationFrame(tickBar)};
+tickBar();
+const endIntro=()=>{intro.classList.add("fade");setTimeout(()=>intro.remove(),220)};
+$("skipBtn").onclick=()=>{endIntro()};
+$("startBtn").onclick=async ()=>{
+  try{vid.muted=false; await vid.play();}catch(e){}
+  endIntro();
+};
+vid.addEventListener("ended", endIntro);
 
-    // referral
-    const u=new URL(location.href);
-    const ref=u.searchParams.get("ref");
-    if(ref && ref!==state.me.id && !state.me.infectedBy){
-      state.me.infectedBy=ref;
-      state.players[ref]=state.players[ref]||{infected:0};
-      state.players[ref].infected++;
-      save();
-      toast("Заражён от: "+ref);
-    }
+// nav
+const setNav=(a)=>{["navHome","navPlay","navBack"].forEach(id=>$(id).classList.remove("active")); $(a).classList.add("active")};
+const showHome=()=>{$("home").style.display="flex";$("gameWrap").style.display="none";setNav("navHome")};
+const showGame=()=>{$("home").style.display="none";$("gameWrap").style.display="block";setNav("navPlay");startGameOnce()};
+$("navHome").onclick=showHome;
+$("navPlay").onclick=showGame;
+$("navBack").onclick=()=>{showHome()};
+$("play").onclick=showGame;
 
-    function myRef(){
-      const base=location.origin+location.pathname;
-      return `${base}?ref=${encodeURIComponent(state.me.id)}`;
-    }
+$("copy").onclick=async ()=>{const link=myRef();try{await navigator.clipboard.writeText(link);toast("COPIED")}catch(e){toast("Copy blocked")}};
+$("share").onclick=async ()=>{const link=myRef();if(navigator.share){try{await navigator.share({title:"Viral Link",text:"Зайди по ссылке — ты заражён 😈",url:link});toast("SENT")}catch(e){try{await navigator.clipboard.writeText(link);toast("COPIED")}catch(_){}}}else{try{await navigator.clipboard.writeText(link);toast("COPIED")}catch(e){}}};
 
-    // UI render
-    function render(){
-      $("myId").textContent=state.me.id;
-      $("refLabel").textContent="?ref="+state.me.id;
-      $("infected").textContent=String(state.players[state.me.id]?.infected||0);
-      $("from").textContent=state.me.infectedBy||"—";
-    }
-    render();
+$("skinBtn").onclick=()=>{const i=SKINS.indexOf(state.me.skin);state.me.skin=SKINS[(i+1)%SKINS.length];localStorage.setItem(KEY,JSON.stringify(state));render(); if(gameScene) gameScene.events.emit("skinChanged")};
 
-    // nav
-    function showHome(){
-      $("home").style.display="flex";
-      $("gameWrap").style.display="none";
-      $("navHome").classList.add("active");
-      $("navPlay").classList.remove("active");
-      $("navChat").classList.remove("active");
-    }
-    function showGame(){
-      $("home").style.display="none";
-      $("gameWrap").style.display="block";
-      $("navHome").classList.remove("active");
-      $("navPlay").classList.add("active");
-      $("navChat").classList.remove("active");
-      startGameOnce();
-    }
-    function openChat(){
-      $("navHome").classList.remove("active");
-      $("navPlay").classList.remove("active");
-      $("navChat").classList.add("active");
-      // 👉 сюда вставишь свою группу/канал
-      const tg = "https://t.me/your_group_here";
-      window.open(tg, "_blank");
-    }
+$("rankBtn").onclick=()=>{
+  const arr=Object.entries(state.players).map(([id,v])=>({id,inf:v.infected||0})).sort((a,b)=>b.inf-a.inf).slice(0,5);
+  toast(arr.map((x,i)=>`#${i+1} ${x.id}:${x.inf}`).join("  •  "),2600)
+};
 
-    $("navHome").onclick=showHome;
-    $("navPlay").onclick=showGame;
-    $("navChat").onclick=openChat;
+$("reset").onclick=()=>{localStorage.removeItem(KEY);location.href=location.pathname};
 
-    $("play").onclick=showGame;
-    $("chat").onclick=openChat;
+let started=false, game=null, gameScene=null;
+function startGameOnce(){
+  if(started) return; started=true;
+  const cfg={type:Phaser.AUTO,parent:"phaser",backgroundColor:"rgba(0,0,0,0)",
+    scale:{mode:Phaser.Scale.RESIZE,autoCenter:Phaser.Scale.CENTER_BOTH},
+    physics:{default:"arcade",arcade:{gravity:{y:1100},debug:false}},
+    scene:{preload,create,update}
+  };
+  game=new Phaser.Game(cfg);
+}
 
-    $("copy").onclick=async ()=>{
-      await navigator.clipboard.writeText(myRef());
-      toast("Скопировано");
-    };
-    $("share").onclick=async ()=>{
-      const link=myRef();
-      if(navigator.share){
-        try{ await navigator.share({title:"Viral Link", text:"Зайди по ссылке — ты заражён 😈", url:link}); toast("Отправлено"); }
-        catch(e){ await navigator.clipboard.writeText(link); toast("Скопировано"); }
-      }else{
-        await navigator.clipboard.writeText(link); toast("Скопировано");
-      }
-    };
+function preload(){
+  SKINS.forEach(s=>this.load.image("z_"+s, "assets/skins/"+s+".png"));
+  this.load.image("h", "assets/humans/human.png");
+  this.load.image("e", "assets/humans/human_elite.png");
+}
+function create(){
+  gameScene=this;
+  const W=this.scale.width,H=this.scale.height;
+  this.gy=Math.floor(H*0.80);
+  this.bg=this.add.graphics(); const draw=()=>{
+    const W=this.scale.width,H=this.scale.height; this.bg.clear();
+    this.bg.fillStyle(0x000000,.22).fillRoundedRect(14,14,W-28,H-28,22);
+    this.bg.lineStyle(2,0xffffff,.06).strokeRoundedRect(14,14,W-28,H-28,22);
+    this.bg.lineStyle(2,0x20ff9a,.07).strokeCircle(W*.25,H*.35,Math.min(W,H)*.42);
+    this.bg.lineStyle(2,0x31d7ff,.07).strokeCircle(W*.75,H*.62,Math.min(W,H)*.36);
+  }; draw(); this.scale.on("resize", draw);
 
-    $("skins").onclick=()=>{
-      // максимально просто: циклим скин
-      const i=SKINS.findIndex(s=>s.id===state.me.skin);
-      state.me.skin=SKINS[(i+1)%SKINS.length].id;
-      save();
-      toast("Skin: "+state.me.skin);
-    };
+  this.player=this.physics.add.sprite(W*.22,this.gy,"z_"+state.me.skin).setDepth(2);
+  this.player.setDisplaySize(90,90); this.player.body.setSize(42,42,true); this.player.setCollideWorldBounds(true);
 
-    $("rank").onclick=()=>{
-      // демо-лидерборд (локально): кто больше всех “infected”
-      const arr=Object.entries(state.players).map(([id,v])=>({id, infected:v.infected||0}));
-      arr.sort((a,b)=>b.infected-a.infected);
-      const top=arr.slice(0,5).map((x,i)=>`#${i+1} ${x.id}: ${x.infected}`).join(" | ");
-      toast(top, 2600);
-    };
+  this.floor=this.physics.add.staticImage(W/2,this.gy+80,null); this.floor.displayWidth=W; this.floor.refreshBody();
+  this.physics.add.collider(this.player,this.floor);
 
-    // ---- Phaser game (simple + addictive)
-    let started=false;
-    let game=null;
+  this.humans=this.physics.add.group();
+  this.score=0; this.combo=1; this.comboT=0; this.streak=0; this.level=1; this.spawnT=0; this.runT=0;
 
-    function startGameOnce(){
-      if(started) return;
-      started=true;
+  this.p=this.add.particles(0xffffff);
+  this.em=this.p.createEmitter({speed:{min:80,max:260},lifespan:{min:240,max:560},scale:{start:.7,end:0},alpha:{start:.35,end:0},quantity:0,blendMode:"ADD"});
 
-      const cfg={
-        type: Phaser.AUTO,
-        parent: "phaser",
-        backgroundColor: "rgba(0,0,0,0)",
-        scale:{
-          mode: Phaser.Scale.RESIZE,
-          autoCenter: Phaser.Scale.CENTER_BOTH,
-          width: window.innerWidth,
-          height: window.innerHeight,
-        },
-        physics:{ default:"arcade", arcade:{ gravity:{y: 1100}, debug:false } },
-        scene:{ preload, create, update }
-      };
-      game = new Phaser.Game(cfg);
-    }
+  this.physics.add.overlap(this.player,this.humans,(pl,hu)=>{
+    if(hu.hit) return; hu.hit=true;
+    const add=hu.elite?3:1;
+    this.score += add*this.combo;
+    this.combo = Math.min(12, this.combo + (hu.elite?2:1));
+    this.comboT = 70;
+    this.em.explode(26+add*8,hu.x,hu.y);
+    hu.destroy();
 
-    function preload(){
-      // skins
-      for(const s of SKINS) this.load.image("skin_"+s.id, s.src);
-      this.load.image("human", "assets/humans/human.png");
-      this.load.image("elite", "assets/humans/human_elite.png");
-    }
+    const target=this.level*55;
+    if(this.score>=target){this.level++;this.streak++;this.cameras.main.shake(90,.004);this.em.explode(44,pl.x+30,pl.y-10);}
+    $("score").textContent=this.score; $("combo").textContent="x"+this.combo; $("streak").textContent=this.streak;
+  });
 
-    function create(){
-      const W=this.scale.width, H=this.scale.height;
-      this.groundY = Math.floor(H*0.80);
+  let hold=null;
+  this.input.on("pointerdown",()=>{hold=setTimeout(()=>{this.player.setVelocityX(280);this.time.delayedCall(120,()=>this.player.setVelocityX(0));},130)});
+  this.input.on("pointerup",()=>{if(hold){clearTimeout(hold);hold=null} if(this.player.body.blocked.down) this.player.setVelocityY(-540);});
 
-      // subtle parallax stripes
-      this.bgG = this.add.graphics();
-      const drawBG = ()=>{
-        this.bgG.clear();
-        this.bgG.fillStyle(0x000000, 0.22);
-        this.bgG.fillRoundedRect(14, 14, W-28, H-28, 22);
-        this.bgG.lineStyle(2, 0xffffff, 0.06);
-        this.bgG.strokeRoundedRect(14, 14, W-28, H-28, 22);
-        this.bgG.lineStyle(2, 0x20ff9a, 0.07);
-        this.bgG.strokeCircle(W*0.25, H*0.35, Math.min(W,H)*0.42);
-        this.bgG.lineStyle(2, 0x31d7ff, 0.07);
-        this.bgG.strokeCircle(W*0.75, H*0.62, Math.min(W,H)*0.36);
-      };
-      drawBG();
-      this.scale.on("resize", ()=>drawBG());
+  this.events.on("skinChanged",()=>{this.player.setTexture("z_"+state.me.skin);});
+}
+function update(_,dt){
+  const W=this.scale.width;
+  this.runT += dt;
+  const speed=260 + Math.min(520, this.runT/18);
+  this.spawnT += dt;
+  if(this.spawnT > 520 - Math.min(300, this.runT/12)){
+    this.spawnT=0;
+    const elite=Math.random()<.16;
+    const y=this.gy - 18 - Math.random()*60;
+    const x=W + 120 + Math.random()*260;
+    const hu=this.humans.create(x,y,elite?"e":"h");
+    hu.setDisplaySize(elite?66:58,elite?66:58); hu.body.setSize(32,32,true);
+    hu.setVelocityX(-speed); hu.elite=elite; hu.hit=false;
+  }
+  this.humans.children.each(hu=>{if(hu && hu.x<-160) hu.destroy()});
+  if(this.comboT>0) this.comboT--; else this.combo=Math.max(1,this.combo-1);
 
-      // player
-      this.player = this.physics.add.sprite(W*0.22, this.groundY, "skin_"+state.me.skin);
-      this.player.setDisplaySize(86,86);
-      this.player.setCollideWorldBounds(true);
-      this.player.body.setSize(40,40,true);
-      this.player.setDepth(2);
-
-      // floor (invisible)
-      this.floor = this.physics.add.staticImage(W/2, this.groundY+70, null);
-      this.floor.displayWidth = W;
-      this.floor.displayHeight = 10;
-      this.floor.refreshBody();
-
-      // humans group
-      this.humans = this.physics.add.group();
-      this.spawnT=0;
-
-      // score
-      this.score=0; this.combo=1; this.comboT=0; this.streak=0; this.level=1;
-
-      // particles (simple)
-      this.p = this.add.particles(0xffffff);
-      this.em = this.p.createEmitter({
-        speed: {min:80, max:240},
-        lifespan: {min:250, max:520},
-        quantity: 0,
-        scale: {start:0.6, end:0},
-        alpha: {start:0.35, end:0},
-        blendMode: "ADD"
-      });
-
-      // collision: infect
-      this.physics.add.overlap(this.player, this.humans, (pl, hu)=>{
-        if(hu.hit) return;
-        hu.hit=true;
-        const add = hu.isElite ? 3 : 1;
-        this.score += add * this.combo;
-        this.combo = Math.min(12, this.combo + (hu.isElite?2:1));
-        this.comboT = 70;
-
-        this.em.explode(24 + add*6, hu.x, hu.y);
-        hu.destroy();
-
-        // level / streak
-        const target = this.level * 55;
-        if(this.score >= target){
-          this.level++; this.streak++;
-          this.em.explode(44, pl.x+30, pl.y-10);
-        }
-
-        $("score").textContent = this.score;
-        $("combo").textContent = "x"+this.combo;
-        $("streak").textContent = this.streak;
-      });
-
-      // input: tap jump / hold dash
-      let hold=null;
-      this.input.on("pointerdown", ()=>{
-        hold=setTimeout(()=>{
-          // dash = speed boost via velocity
-          this.player.setVelocityX(260);
-          this.time.delayedCall(120, ()=>this.player.setVelocityX(0));
-        }, 130);
-      });
-      this.input.on("pointerup", ()=>{
-        if(hold){ clearTimeout(hold); hold=null; }
-        if(this.player.y >= this.groundY-2){
-          this.player.setVelocityY(-520);
-        }
-      });
-
-      // cleanup if skin changes while game is running
-      this.events.on("resume", ()=>{
-        this.player.setTexture("skin_"+state.me.skin);
-      });
-    }
-
-    function update(time, dt){
-      const W=this.scale.width, H=this.scale.height;
-      const speed = 260 + Math.min(420, time/14);
-
-      // keep player on ground
-      if(this.player.y > this.groundY) this.player.y=this.groundY;
-
-      // spawn humans
-      this.spawnT += dt;
-      if(this.spawnT > 520 - Math.min(280, time/10)){
-        this.spawnT = 0;
-        const elite = Math.random() < 0.16;
-        const y = this.groundY - 18 - Math.random()*60;
-        const x = W + 120 + Math.random()*260;
-        const hu = this.humans.create(x, y, elite ? "elite" : "human");
-        hu.setDisplaySize(elite?66:58, elite?66:58);
-        hu.body.setSize(32,32,true);
-        hu.setVelocityX(-speed);
-        hu.isElite = elite;
-        hu.hit = false;
-      }
-
-      // despawn out of screen
-      this.humans.children.each((hu)=>{
-        if(hu && hu.x < -140) hu.destroy();
-      });
-
-      // combo decay
-      if(this.comboT>0) this.comboT -= 1;
-      else this.combo = Math.max(1, this.combo-1);
-
-      // end run after ~45 sec: reward infected count (demo)
-      if(time > 45000){
-        // reward: every 20 score = +1 infected
-        const bonus = Math.floor(this.score/20);
-        if(bonus>0){
-          state.players[state.me.id] = state.players[state.me.id] || {infected:0};
-          state.players[state.me.id].infected += bonus;
-          save(); render();
-          toast("Run bonus +"+bonus+" to INFECTED", 2200);
-        }
-        // reset
-        this.scene.restart();
-      }
-
-      // update skin live
-      const want = "skin_"+state.me.skin;
-      if(this.player.texture?.key !== want) this.player.setTexture(want);
-    }
-  </script>
-</body>
-</html>
+  // 45s run -> бонус в "infected"
+  if(this.runT>45000){
+    const bonus=Math.floor(this.score/20);
+    if(bonus>0){state.players[state.me.id]=state.players[state.me.id]||{infected:0};state.players[state.me.id].infected+=bonus;localStorage.setItem(KEY,JSON.stringify(state));render();toast("RUN BONUS +"+bonus+" INFECTED",2200)}
+    this.scene.restart();
+  }
+}
+</script></body></html>
