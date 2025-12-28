@@ -1,0 +1,1874 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#07090c" />
+  <title>Viral Link — Infect & Rise</title>
+  <style>
+    :root{
+      --bg:#07090c;
+      --bg2:#0b0f14;
+      --card:rgba(255,255,255,.06);
+      --card2:rgba(255,255,255,.08);
+      --stroke:rgba(255,255,255,.10);
+      --text:rgba(255,255,255,.92);
+      --muted:rgba(255,255,255,.62);
+      --danger:#ff2f6d;
+      --good:#2bff9b;
+      --bio:#20ff9a;
+      --cyan:#31d7ff;
+      --gold:#ffd56a;
+      --shadow: 0 18px 60px rgba(0,0,0,.55);
+      --shadow2: 0 12px 30px rgba(0,0,0,.35);
+      --r: 22px;
+      --r2: 28px;
+      --pad: 14px;
+      --safeTop: env(safe-area-inset-top, 0px);
+      --safeBottom: env(safe-area-inset-bottom, 0px);
+      --vh: 1vh;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%; background:var(--bg); color:var(--text); margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";}
+    body{
+      overscroll-behavior:none;
+      -webkit-tap-highlight-color: transparent;
+      user-select:none;
+      touch-action: manipulation;
+    }
+    a{color:inherit}
+    .no-desktop{
+      position:fixed; inset:0; display:none; align-items:center; justify-content:center;
+      background: radial-gradient(1200px 900px at 50% 15%, rgba(32,255,154,.16), transparent 55%),
+                  radial-gradient(900px 700px at 20% 65%, rgba(49,215,255,.14), transparent 55%),
+                  radial-gradient(900px 700px at 80% 70%, rgba(255,47,109,.10), transparent 55%),
+                  linear-gradient(180deg, #06080b, #07090c 35%, #06080b);
+      z-index:99999;
+      padding:24px;
+      text-align:center;
+    }
+    .no-desktop .card{
+      width:min(520px, 92vw);
+      border-radius:24px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow: var(--shadow);
+      padding:22px;
+    }
+    .no-desktop h2{margin:0 0 6px; font-size:18px}
+    .no-desktop p{margin:0; color:rgba(255,255,255,.68); font-size:14px; line-height:1.35}
+
+    /* App Shell */
+    .app{
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      padding-top: calc(10px + var(--safeTop));
+      padding-bottom: calc(10px + var(--safeBottom));
+      background:
+        radial-gradient(1100px 700px at 50% 0%, rgba(32,255,154,.15), transparent 55%),
+        radial-gradient(900px 700px at 10% 50%, rgba(49,215,255,.12), transparent 55%),
+        radial-gradient(1000px 700px at 90% 60%, rgba(255,47,109,.10), transparent 60%),
+        linear-gradient(180deg, #05070a, #07090c 35%, #06070a);
+      position:relative;
+      overflow:hidden;
+    }
+
+    /* Particles layer */
+    canvas#fx{
+      position:absolute; inset:0; z-index:0; pointer-events:none; opacity:.9;
+    }
+
+    .topbar{
+      position:relative;
+      z-index:2;
+      padding: 8px var(--pad);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+
+    .brand{
+      display:flex; align-items:center; gap:10px;
+    }
+    .sigil{
+      width:38px; height:38px; border-radius:14px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(32,255,154,.85), rgba(32,255,154,.0) 60%),
+        radial-gradient(circle at 70% 60%, rgba(49,215,255,.65), rgba(49,215,255,0) 60%),
+        linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.16);
+      box-shadow: 0 12px 30px rgba(0,0,0,.45);
+      position:relative;
+      overflow:hidden;
+    }
+    .sigil:after{
+      content:"";
+      position:absolute; inset:-40%;
+      background: conic-gradient(from 220deg, rgba(32,255,154,.0), rgba(32,255,154,.28), rgba(49,215,255,.0), rgba(255,47,109,.18), rgba(32,255,154,.0));
+      animation: spin 5.5s linear infinite;
+      filter: blur(6px);
+      opacity:.95;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .brand .t{
+      display:flex; flex-direction:column; line-height:1.05;
+    }
+    .brand .t .title{
+      font-weight:800; letter-spacing:.4px; font-size:14px;
+    }
+    .brand .t .sub{
+      font-size:11px; color:rgba(255,255,255,.62);
+    }
+
+    .pill{
+      display:flex; align-items:center; gap:8px;
+      border-radius: 999px;
+      padding: 9px 12px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: var(--shadow2);
+    }
+    .pill .dot{
+      width:10px; height:10px; border-radius:99px;
+      background: radial-gradient(circle at 30% 30%, rgba(32,255,154,1), rgba(32,255,154,.25));
+      box-shadow: 0 0 18px rgba(32,255,154,.35);
+    }
+    .pill .small{
+      font-size:11px; color:rgba(255,255,255,.75)
+    }
+    .pill .mono{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:11px; letter-spacing:.6px;
+    }
+
+    .main{
+      position:relative;
+      z-index:2;
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      padding: 8px var(--pad);
+      overflow:hidden;
+    }
+
+    .panel{
+      border-radius: var(--r2);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      overflow:hidden;
+      position:relative;
+    }
+    .panel:before{
+      content:"";
+      position:absolute; inset:-1px;
+      background:
+        radial-gradient(1200px 500px at 20% 0%, rgba(32,255,154,.12), transparent 60%),
+        radial-gradient(900px 500px at 80% 20%, rgba(49,215,255,.10), transparent 60%),
+        radial-gradient(900px 600px at 70% 110%, rgba(255,47,109,.08), transparent 60%);
+      pointer-events:none;
+    }
+
+    /* Screen container */
+    .screen{
+      height:100%;
+      display:none;
+      flex-direction:column;
+      gap:12px;
+      padding: 14px;
+      position:relative;
+    }
+    .screen.active{display:flex}
+
+    .hero{
+      padding:16px;
+      border-radius: 22px;
+      background:
+        radial-gradient(700px 260px at 20% 10%, rgba(32,255,154,.18), transparent 60%),
+        radial-gradient(700px 260px at 80% 30%, rgba(49,215,255,.12), transparent 65%),
+        linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow: 0 18px 60px rgba(0,0,0,.45);
+      overflow:hidden;
+      position:relative;
+    }
+    .hero h1{
+      margin:0 0 6px;
+      font-size:18px;
+      letter-spacing:.2px;
+    }
+    .hero p{
+      margin:0;
+      color:rgba(255,255,255,.72);
+      font-size:12.5px;
+      line-height:1.35;
+    }
+    .hero .glowline{
+      height:1px;
+      margin:12px 0;
+      background: linear-gradient(90deg, transparent, rgba(32,255,154,.65), rgba(49,215,255,.55), rgba(255,47,109,.35), transparent);
+      filter: blur(.2px);
+      opacity:.9;
+    }
+
+    .grid2{display:grid; grid-template-columns: 1fr 1fr; gap:10px;}
+    .grid3{display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px;}
+    .row{display:flex; gap:10px; align-items:center}
+    .col{display:flex; flex-direction:column; gap:10px}
+
+    /* AAA Buttons */
+    .btn{
+      appearance:none; border:none; outline:none;
+      display:flex; align-items:center; justify-content:center; gap:10px;
+      width:100%;
+      padding: 14px 14px;
+      border-radius: 18px;
+      font-weight:800;
+      letter-spacing:.2px;
+      color: rgba(0,0,0,.92);
+      background:
+        radial-gradient(140% 140% at 20% 20%, rgba(255,255,255,.55), rgba(255,255,255,0) 38%),
+        linear-gradient(90deg, rgba(32,255,154,1), rgba(49,215,255,1));
+      box-shadow:
+        0 16px 40px rgba(0,0,0,.45),
+        0 0 0 1px rgba(255,255,255,.20) inset,
+        0 0 40px rgba(32,255,154,.20);
+      position:relative;
+      overflow:hidden;
+      transform: translateZ(0);
+      transition: transform .12s ease, filter .12s ease;
+    }
+    .btn:active{transform: scale(.985); filter: brightness(.98)}
+    .btn.secondary{
+      color:rgba(255,255,255,.92);
+      background:
+        radial-gradient(120% 120% at 20% 20%, rgba(255,255,255,.16), rgba(255,255,255,0) 40%),
+        linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow: var(--shadow2);
+    }
+    .btn.danger{
+      color:rgba(255,255,255,.92);
+      background:
+        radial-gradient(140% 140% at 20% 20%, rgba(255,255,255,.10), rgba(255,255,255,0) 40%),
+        linear-gradient(90deg, rgba(255,47,109,1), rgba(255,144,99,1));
+      box-shadow:
+        0 16px 40px rgba(0,0,0,.45),
+        0 0 0 1px rgba(255,255,255,.16) inset,
+        0 0 40px rgba(255,47,109,.20);
+    }
+    .btn.small{padding:10px 12px; border-radius: 14px; font-size:13px}
+    .btn .shine{
+      position:absolute; inset:-60%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
+      transform: rotate(25deg) translateX(-40%);
+      animation: shine 2.4s ease-in-out infinite;
+      opacity:.75;
+      pointer-events:none;
+    }
+    @keyframes shine{
+      0%{transform: rotate(25deg) translateX(-70%); opacity:.0}
+      20%{opacity:.5}
+      60%{opacity:.35}
+      100%{transform: rotate(25deg) translateX(70%); opacity:.0}
+    }
+
+    .chip{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color:rgba(255,255,255,.84);
+      font-size:12px;
+      box-shadow: 0 12px 28px rgba(0,0,0,.25);
+    }
+    .chip b{color:rgba(255,255,255,.95)}
+    .chip .tag{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      letter-spacing:.7px;
+      font-size:11px;
+      opacity:.9;
+    }
+
+    .stat{
+      border-radius:20px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      padding: 12px;
+      box-shadow: 0 10px 24px rgba(0,0,0,.28);
+    }
+    .stat .k{font-size:11px; color:rgba(255,255,255,.65)}
+    .stat .v{font-size:18px; font-weight:900; margin-top:3px}
+    .stat .v .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; font-size:14px}
+
+    .tabs{
+      display:flex; gap:10px;
+      padding: 10px var(--pad);
+      position:relative;
+      z-index:2;
+    }
+    .tab{
+      flex:1;
+      padding:10px 10px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.10);
+      color: rgba(255,255,255,.72);
+      font-weight:800;
+      text-align:center;
+      box-shadow: 0 8px 18px rgba(0,0,0,.24);
+      transition: transform .12s ease, background .12s ease, color .12s ease;
+    }
+    .tab.active{
+      color: rgba(0,0,0,.88);
+      background: linear-gradient(90deg, rgba(32,255,154,.95), rgba(49,215,255,.95));
+      border-color: rgba(255,255,255,.14);
+      box-shadow: 0 14px 34px rgba(0,0,0,.35), 0 0 30px rgba(32,255,154,.18);
+    }
+    .tab:active{transform: scale(.99)}
+
+    .muted{color:rgba(255,255,255,.66)}
+    .tiny{font-size:11px}
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; letter-spacing:.6px}
+
+    /* Inputs */
+    .field{
+      display:flex; flex-direction:column; gap:8px;
+      padding: 12px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: 0 10px 24px rgba(0,0,0,.22);
+    }
+    .field label{font-size:11px; color:rgba(255,255,255,.68)}
+    .field input, .field textarea{
+      width:100%;
+      background: rgba(0,0,0,.35);
+      border:1px solid rgba(255,255,255,.10);
+      color:rgba(255,255,255,.92);
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-size:13px;
+      outline:none;
+      resize:none;
+    }
+    .field textarea{min-height:72px; line-height:1.25}
+    .field input::placeholder,.field textarea::placeholder{color:rgba(255,255,255,.35)}
+
+    /* Lists */
+    .list{
+      display:flex; flex-direction:column; gap:10px;
+      overflow:auto;
+      padding-right:2px;
+      -webkit-overflow-scrolling: touch;
+      max-height: 38vh;
+    }
+    .item{
+      display:flex; gap:10px; align-items:center; justify-content:space-between;
+      padding: 12px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow: 0 10px 22px rgba(0,0,0,.20);
+    }
+    .item .left{display:flex; gap:10px; align-items:center}
+    .badge{
+      width:34px; height:34px; border-radius: 14px;
+      border:1px solid rgba(255,255,255,.14);
+      background:
+        radial-gradient(circle at 30% 30%, rgba(32,255,154,.55), rgba(32,255,154,0) 60%),
+        radial-gradient(circle at 70% 60%, rgba(49,215,255,.45), rgba(49,215,255,0) 60%),
+        rgba(255,255,255,.06);
+      box-shadow: 0 12px 26px rgba(0,0,0,.24);
+      position:relative;
+      overflow:hidden;
+    }
+    .badge:after{
+      content:"";
+      position:absolute; inset:-45%;
+      background: conic-gradient(from 180deg, rgba(32,255,154,0), rgba(32,255,154,.22), rgba(49,215,255,0), rgba(255,47,109,.16), rgba(32,255,154,0));
+      animation: spin 7s linear infinite;
+      filter: blur(6px);
+    }
+    .item .name{font-weight:900; font-size:13px}
+    .item .sub{font-size:11px; color:rgba(255,255,255,.62)}
+    .rank{
+      font-weight:900; font-size:14px;
+      color: rgba(0,0,0,.90);
+      padding: 8px 10px;
+      border-radius: 14px;
+      background: linear-gradient(90deg, rgba(255,213,106,1), rgba(32,255,154,1));
+      box-shadow: 0 12px 28px rgba(0,0,0,.28);
+      min-width: 72px;
+      text-align:center;
+    }
+
+    /* Game */
+    .gameWrap{
+      display:flex; flex-direction:column; gap:12px;
+    }
+    .hud{
+      display:flex; gap:10px; align-items:center; justify-content:space-between;
+    }
+    .hud .score{
+      flex:1;
+      padding: 10px 12px;
+      border-radius: 16px;
+      background: rgba(0,0,0,.30);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 12px 26px rgba(0,0,0,.25);
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .hud .score b{font-size:13px}
+    .hud .score span{font-size:13px}
+    canvas#game{
+      width:100%;
+      height: 44vh;
+      border-radius: 22px;
+      background:
+        radial-gradient(800px 380px at 25% 15%, rgba(32,255,154,.12), transparent 60%),
+        radial-gradient(650px 360px at 85% 30%, rgba(49,215,255,.10), transparent 60%),
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 20px 60px rgba(0,0,0,.45);
+      touch-action:none;
+    }
+    .hint{
+      text-align:center;
+      color:rgba(255,255,255,.62);
+      font-size:11px;
+    }
+
+    /* Chat */
+    .chatBox{
+      display:flex; flex-direction:column; gap:10px;
+      height: 46vh;
+    }
+    .chatList{
+      flex:1;
+      overflow:auto;
+      -webkit-overflow-scrolling: touch;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      padding-right:2px;
+    }
+    .msg{
+      align-self:flex-start;
+      max-width: 86%;
+      padding: 10px 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow: 0 10px 20px rgba(0,0,0,.18);
+    }
+    .msg.mine{align-self:flex-end; background: rgba(32,255,154,.10); border-color: rgba(32,255,154,.18)}
+    .msg .h{display:flex; gap:8px; align-items:center; justify-content:space-between; margin-bottom:4px}
+    .msg .h b{font-size:11px}
+    .msg .h span{font-size:10px; color:rgba(255,255,255,.60)}
+    .msg p{margin:0; font-size:12.5px; color:rgba(255,255,255,.88); line-height:1.3; word-break:break-word}
+    .msg audio{width:100%; margin-top:6px}
+    .chatInput{
+      display:flex; gap:10px; align-items:center;
+      padding:10px;
+      border-radius: 18px;
+      background: rgba(0,0,0,.28);
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow: 0 12px 26px rgba(0,0,0,.24);
+    }
+    .chatInput input{
+      flex:1;
+      background: transparent;
+      border:none;
+      outline:none;
+      color:rgba(255,255,255,.92);
+      font-size:13px;
+    }
+    .iconBtn{
+      width:44px; height:44px;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      display:grid; place-items:center;
+      box-shadow: 0 10px 22px rgba(0,0,0,.20);
+      transition: transform .12s ease, filter .12s ease;
+    }
+    .iconBtn:active{transform: scale(.985); filter: brightness(.98)}
+    .recDot{
+      width:10px; height:10px; border-radius:99px;
+      background: rgba(255,47,109,1);
+      box-shadow: 0 0 18px rgba(255,47,109,.55);
+      display:none;
+    }
+    .icon{
+      width:18px; height:18px; opacity:.9;
+      fill: none; stroke: rgba(255,255,255,.90); stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
+    }
+
+    /* Bottom Nav */
+    .nav{
+      position:relative;
+      z-index:2;
+      display:flex;
+      gap:10px;
+      padding: 8px var(--pad);
+    }
+    .nav .navBtn{
+      flex:1;
+      padding: 12px 10px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.10);
+      color: rgba(255,255,255,.70);
+      font-weight:900;
+      font-size:12px;
+      display:flex; align-items:center; justify-content:center; gap:8px;
+      box-shadow: 0 10px 22px rgba(0,0,0,.22);
+      transition: transform .12s ease, background .12s ease, color .12s ease;
+    }
+    .nav .navBtn.active{
+      color: rgba(0,0,0,.90);
+      background: linear-gradient(90deg, rgba(32,255,154,.95), rgba(49,215,255,.95));
+      box-shadow: 0 16px 38px rgba(0,0,0,.36), 0 0 30px rgba(32,255,154,.16);
+      border-color: rgba(255,255,255,.14);
+    }
+    .nav .navBtn:active{transform: scale(.99)}
+
+    /* Toast */
+    .toast{
+      position:fixed;
+      left:50%;
+      transform: translateX(-50%);
+      bottom: calc(86px + var(--safeBottom));
+      z-index:9999;
+      padding: 10px 12px;
+      border-radius: 16px;
+      background: rgba(0,0,0,.65);
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 18px 50px rgba(0,0,0,.55);
+      color: rgba(255,255,255,.88);
+      font-size:12px;
+      opacity:0;
+      pointer-events:none;
+      transition: opacity .18s ease, transform .18s ease;
+      max-width: 92vw;
+    }
+    .toast.show{opacity:1; transform: translateX(-50%) translateY(-4px)}
+    .toast b{color:rgba(255,255,255,.95)}
+
+    /* Prevent horizontal layout */
+    @media (min-width: 820px) and (min-height: 520px){
+      .no-desktop{display:flex}
+    }
+  </style>
+</head>
+<body>
+  <div class="no-desktop">
+    <div class="card">
+      <h2>Viral Link — мобайл-онли</h2>
+      <p>Открой сайт с телефона (вертикально). На десктопе это специально заблокировано.</p>
+    </div>
+  </div>
+
+  <div class="app" id="app">
+    <canvas id="fx"></canvas>
+
+    <div class="topbar">
+      <div class="brand">
+        <div class="sigil" aria-hidden="true"></div>
+        <div class="t">
+          <div class="title">VIRAL LINK</div>
+          <div class="sub">Infect • Rise • Rule</div>
+        </div>
+      </div>
+      <div class="pill" id="pill">
+        <div class="dot"></div>
+        <div class="small">ID</div>
+        <div class="mono" id="myId">—</div>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="panel">
+        <!-- HOME -->
+        <div class="screen active" id="screen-home">
+          <div class="hero">
+            <h1>Твоя ссылка — вирус.</h1>
+            <p>Каждый новый игрок, пришедший по твоей ссылке, увеличивает твой <b>Infected Count</b>.
+              Заражай в игре, качай рейтинг, и стань <b>нулевым пациентом</b>.</p>
+            <div class="glowline"></div>
+            <div class="row" style="justify-content:space-between; gap:8px; flex-wrap:wrap;">
+              <span class="chip"><span class="tag">REF</span> <b id="refLabel">?ref=—</b></span>
+              <span class="chip"><span class="tag">INFECTED</span> <b id="infectedCount">0</b></span>
+              <span class="chip"><span class="tag">FROM</span> <b class="mono" id="infectedBy">—</b></span>
+            </div>
+          </div>
+
+          <div class="grid2">
+            <div class="stat">
+              <div class="k">Твой ник</div>
+              <div class="v" id="nickStat">Zombie</div>
+            </div>
+            <div class="stat">
+              <div class="k">Лучший забег</div>
+              <div class="v"><span class="mono" id="bestRun">0</span></div>
+            </div>
+          </div>
+
+          <button class="btn" id="btnPlay">
+            <span>ИГРАТЬ • ЗАРАЖАТЬ</span>
+            <span class="shine" aria-hidden="true"></span>
+          </button>
+
+          <div class="grid2">
+            <button class="btn secondary" id="btnCopyLink">Скопировать вирус-ссылку</button>
+            <button class="btn secondary" id="btnShare">Поделиться</button>
+          </div>
+
+          <button class="btn danger" id="btnReset">Сбросить демо-данные</button>
+          <div class="hint">⚠️ В демо всё хранится на устройстве. Для реального “глобала” подключишь бэкенд — UI уже готов.</div>
+        </div>
+
+        <!-- GAME -->
+        <div class="screen" id="screen-game">
+          <div class="hud">
+            <div class="score">
+              <b>Заражено</b>
+              <span class="mono" id="scoreNow">0</span>
+            </div>
+            <div class="score">
+              <b>Комбо</b>
+              <span class="mono" id="comboNow">x1</span>
+            </div>
+          </div>
+
+          <div class="gameWrap">
+            <canvas id="game" width="360" height="520"></canvas>
+            <div class="hint">Тап — прыжок • Держи — рывок • Цель: коснуться человека = заражение</div>
+          </div>
+
+          <div class="grid2">
+            <button class="btn secondary" id="btnGameBack">Назад</button>
+            <button class="btn" id="btnGameRestart">Новый забег<span class="shine" aria-hidden="true"></span></button>
+          </div>
+        </div>
+
+        <!-- SKINS -->
+        <div class="screen" id="screen-skins">
+          <div class="hero">
+            <h1>Скины зомби</h1>
+            <p>Выбери стиль. Это влияет на VFX в игре (визуально) и на “ауру” профиля.</p>
+            <div class="glowline"></div>
+            <div class="row" style="justify-content:space-between;">
+              <span class="chip"><span class="tag">SELECTED</span> <b id="skinSelectedName">—</b></span>
+              <span class="chip"><span class="tag">RARITY</span> <b id="skinSelectedRarity">—</b></span>
+            </div>
+          </div>
+
+          <div class="list" id="skinsList"></div>
+          <button class="btn" id="btnSaveSkin">СОХРАНИТЬ СКИН<span class="shine" aria-hidden="true"></span></button>
+        </div>
+
+        <!-- LEADERBOARD -->
+        <div class="screen" id="screen-leaderboard">
+          <div class="hero">
+            <h1>Лидерборд заражений</h1>
+            <p>Кто заразил больше всего игроков. В демо — локально. Логика готова для API.</p>
+            <div class="glowline"></div>
+            <div class="row" style="justify-content:space-between;">
+              <span class="chip"><span class="tag">YOU</span> <b id="youRank">—</b></span>
+              <span class="chip"><span class="tag">TOTAL</span> <b id="totalPlayers">—</b></span>
+            </div>
+          </div>
+
+          <div class="list" id="lbList"></div>
+          <button class="btn secondary" id="btnSeedBots">Заполнить демо-игроками</button>
+        </div>
+
+        <!-- CHAT -->
+        <div class="screen" id="screen-chat">
+          <div class="hero">
+            <h1>Глобальный чат</h1>
+            <p><b>НЕЛЬЗЯ</b> ссылки и файлы. Только текст + голосовые. URL автоматически вырезается.</p>
+            <div class="glowline"></div>
+            <div class="row" style="justify-content:space-between;">
+              <span class="chip"><span class="tag">MODE</span> <b>TEXT + VOICE</b></span>
+              <span class="chip"><span class="tag">FILTER</span> <b>NO URL</b></span>
+            </div>
+          </div>
+
+          <div class="chatBox">
+            <div class="chatList" id="chatList"></div>
+
+            <div class="chatInput">
+              <input id="chatText" placeholder="Напиши сообщение (ссылки будут удалены)" maxlength="220" />
+              <button class="iconBtn" id="btnRec" title="Voice" aria-label="Voice">
+                <span class="recDot" id="recDot"></span>
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 14a3 3 0 0 0 3-3V7a3 3 0 0 0-6 0v4a3 3 0 0 0 3 3Z"></path>
+                  <path d="M19 11a7 7 0 0 1-14 0"></path>
+                  <path d="M12 18v3"></path>
+                </svg>
+              </button>
+              <button class="iconBtn" id="btnSend" title="Send" aria-label="Send">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M22 2 11 13"></path>
+                  <path d="M22 2 15 22 11 13 2 9 22 2Z"></path>
+                </svg>
+              </button>
+            </div>
+            <div class="hint tiny">Голосовые записываются на устройстве (демо). В проде — отправка на сервер.</div>
+          </div>
+        </div>
+
+        <!-- PROFILE -->
+        <div class="screen" id="screen-profile">
+          <div class="hero">
+            <h1>Профиль</h1>
+            <p>Тут можно био + разрешённые ссылки. В чате ссылки запрещены.</p>
+            <div class="glowline"></div>
+            <div class="row" style="justify-content:space-between;">
+              <span class="chip"><span class="tag">ID</span> <b class="mono" id="profileId">—</b></span>
+              <span class="chip"><span class="tag">SKIN</span> <b id="profileSkin">—</b></span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Ник (до 16)</label>
+            <input id="nickInput" maxlength="16" placeholder="Например: PatientZero" />
+          </div>
+
+          <div class="field">
+            <label>Описание (bio)</label>
+            <textarea id="bioInput" maxlength="220" placeholder="Коротко о себе..."></textarea>
+          </div>
+
+          <div class="field">
+            <label>Разрешённые ссылки (до 3) — только тут</label>
+            <input id="link1" placeholder="https://..." />
+            <input id="link2" placeholder="https://..." />
+            <input id="link3" placeholder="https://..." />
+            <div class="tiny muted">Допускаются только http/https. Остальное вырежется.</div>
+          </div>
+
+          <button class="btn" id="btnSaveProfile">СОХРАНИТЬ ПРОФИЛЬ<span class="shine" aria-hidden="true"></span></button>
+
+          <div class="stat">
+            <div class="k">Твоя вирус-ссылка</div>
+            <div class="v"><span class="mono" id="profileRef">—</span></div>
+          </div>
+
+          <button class="btn secondary" id="btnCopyProfileRef">Копировать ссылку</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav">
+      <button class="navBtn active" data-go="home">Home</button>
+      <button class="navBtn" data-go="skins">Skins</button>
+      <button class="navBtn" data-go="leaderboard">Rank</button>
+      <button class="navBtn" data-go="chat">Chat</button>
+      <button class="navBtn" data-go="profile">Profile</button>
+    </div>
+
+    <div class="toast" id="toast"></div>
+  </div>
+
+  <script>
+    /* =========================================================
+       Viral Link — Single-file Frontend (Demo-ready)
+       - Mobile-only vertical UI
+       - Referral infection via ?ref=
+       - Leaderboard (local demo store)
+       - 2D mini-game (Canvas runner)
+       - Skins / Profile
+       - Global chat (text + voice), NO URLs allowed in chat
+       ========================================================= */
+
+    // --- Safe viewport height fix for mobile browsers ---
+    function setVH(){
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    }
+    window.addEventListener('resize', setVH, {passive:true});
+    setVH();
+
+    // --- Haptics + click sound (subtle) ---
+    const SFX = (() => {
+      let ctx = null;
+      function beep(freq=220, ms=30, gain=0.04){
+        try{
+          ctx = ctx || new (window.AudioContext || window.webkitAudioContext)();
+          const o = ctx.createOscillator();
+          const g = ctx.createGain();
+          o.type = "sine";
+          o.frequency.value = freq;
+          g.gain.value = gain;
+          o.connect(g);
+          g.connect(ctx.destination);
+          o.start();
+          setTimeout(()=>{o.stop();}, ms);
+        }catch(e){}
+      }
+      function tap(){
+        if (navigator.vibrate) navigator.vibrate(12);
+        beep(240, 22, 0.035);
+      }
+      function success(){
+        if (navigator.vibrate) navigator.vibrate([18, 10, 18]);
+        beep(420, 40, 0.045);
+      }
+      function danger(){
+        if (navigator.vibrate) navigator.vibrate([25, 12, 25, 12, 25]);
+        beep(140, 70, 0.05);
+      }
+      return { tap, success, danger };
+    })();
+
+    // --- Minimal helpers ---
+    const $ = (id) => document.getElementById(id);
+    const q = (sel, root=document) => root.querySelector(sel);
+    const qa = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+
+    function toast(msg, ms=1600){
+      const t = $("toast");
+      t.innerHTML = msg;
+      t.classList.add("show");
+      clearTimeout(toast._t);
+      toast._t = setTimeout(()=>t.classList.remove("show"), ms);
+    }
+
+    function clamp(n,a,b){return Math.max(a, Math.min(b,n))}
+    function nowTime(){
+      const d = new Date();
+      return d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    }
+
+    // --- URL / params ---
+    function getParam(name){
+      const u = new URL(window.location.href);
+      return u.searchParams.get(name);
+    }
+    function setParam(name, val){
+      const u = new URL(window.location.href);
+      u.searchParams.set(name, val);
+      history.replaceState({}, "", u.toString());
+    }
+
+    // --- Local Store ---
+    const STORE_KEY = "viral_link_demo_v1";
+    const defaultState = () => ({
+      me: {
+        id: genId(),
+        nick: "PatientZero",
+        skinId: "classic",
+        bio: "",
+        links: [],
+        infectedBy: null,
+        infectedCount: 0,
+        bestRun: 0
+      },
+      // players map: id -> {id, nick, skinId, infectedCount}
+      players: {},
+      // referral edges: childId -> parentId
+      edges: {},
+      chat: [] // {id, fromId, fromNick, t, text?, audioDataUrl?}
+    });
+
+    function loadState(){
+      try{
+        const raw = localStorage.getItem(STORE_KEY);
+        if(!raw){
+          const s = defaultState();
+          s.players[s.me.id] = packPlayer(s.me);
+          saveState(s);
+          return s;
+        }
+        const s = JSON.parse(raw);
+        // mild migration
+        if(!s.players) s.players = {};
+        if(!s.chat) s.chat = [];
+        if(!s.edges) s.edges = {};
+        if(!s.me || !s.me.id) s.me = defaultState().me;
+        if(!s.players[s.me.id]) s.players[s.me.id] = packPlayer(s.me);
+        return s;
+      }catch(e){
+        const s = defaultState();
+        s.players[s.me.id] = packPlayer(s.me);
+        saveState(s);
+        return s;
+      }
+    }
+    function saveState(s){
+      localStorage.setItem(STORE_KEY, JSON.stringify(s));
+    }
+    function packPlayer(me){
+      return { id: me.id, nick: me.nick, skinId: me.skinId, infectedCount: me.infectedCount };
+    }
+
+    function genId(){
+      // short readable ID
+      const a = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+      let out = "";
+      for(let i=0;i<8;i++) out += a[(Math.random()*a.length)|0];
+      return out;
+    }
+
+    // --- Skins catalog ---
+    const SKINS = [
+      { id:"classic", name:"Classic Rot", rarity:"COMMON", aura:"bio", fx:1.0 },
+      { id:"neon", name:"Neon Plague", rarity:"RARE", aura:"cyan", fx:1.15 },
+      { id:"toxic", name:"Toxic Bloom", rarity:"EPIC", aura:"bio", fx:1.25 },
+      { id:"void", name:"Void Carrier", rarity:"LEGEND", aura:"danger", fx:1.35 },
+      { id:"gold", name:"Gilded Infection", rarity:"MYTHIC", aura:"gold", fx:1.45 },
+    ];
+    const skinById = (id) => SKINS.find(s=>s.id===id) || SKINS[0];
+
+    // --- Referral logic (virus link) ---
+    function applyReferral(state){
+      const ref = getParam("ref");
+      if(!ref) return;
+
+      // Ignore self-ref
+      if(ref === state.me.id) return;
+
+      // Only first attribution
+      if(state.me.infectedBy) return;
+
+      state.me.infectedBy = ref;
+      state.edges[state.me.id] = ref;
+
+      // Ensure ref player exists in demo store
+      if(!state.players[ref]){
+        state.players[ref] = { id: ref, nick: "Unknown", skinId:"classic", infectedCount: 0 };
+      }
+
+      // Increment infectedCount for ref
+      state.players[ref].infectedCount = (state.players[ref].infectedCount || 0) + 1;
+
+      // Also mirror to "me" if "me" is ref (not possible above)
+      saveState(state);
+      toast(`Ты заражён от <b>${ref}</b>`, 1800);
+      SFX.success();
+    }
+
+    // --- UI navigation ---
+    const screens = ["home","game","skins","leaderboard","chat","profile"];
+    function showScreen(name){
+      screens.forEach(n=>{
+        const el = $("screen-"+n);
+        if(el) el.classList.toggle("active", n===name);
+      });
+      qa(".navBtn").forEach(b=>b.classList.toggle("active", b.dataset.go===name));
+      SFX.tap();
+      // special refresh
+      if(name==="home") renderHome();
+      if(name==="skins") renderSkins();
+      if(name==="leaderboard") renderLeaderboard();
+      if(name==="chat") renderChat();
+      if(name==="profile") renderProfile();
+      if(name==="game") gameStart(false);
+    }
+
+    // --- URL stripping in chat ---
+    const urlRe = /https?:\/\/[^\s]+|www\.[^\s]+|\b[\w.-]+\.[a-z]{2,}\b/ig;
+    function stripUrls(text){
+      return (text||"").replace(urlRe, "[no-link]");
+    }
+
+    // --- Build share link ---
+    function myRefLink(state){
+      const base = window.location.origin + window.location.pathname;
+      return `${base}?ref=${encodeURIComponent(state.me.id)}`;
+    }
+
+    // --- Global state ---
+    let state = loadState();
+    applyReferral(state);
+
+    // Ensure me exists in players
+    state.players[state.me.id] = packPlayer(state.me);
+    saveState(state);
+
+    // --- Top pill + home stats ---
+    function renderTop(){
+      $("myId").textContent = state.me.id;
+    }
+
+    function renderHome(){
+      renderTop();
+      const ref = myRefLink(state);
+      $("refLabel").textContent = `?ref=${state.me.id}`;
+      $("infectedBy").textContent = state.me.infectedBy || "—";
+      $("infectedCount").textContent = (state.players[state.me.id]?.infectedCount || 0);
+      $("nickStat").textContent = state.me.nick || "Zombie";
+      $("bestRun").textContent = String(state.me.bestRun || 0);
+    }
+
+    // --- Skins screen ---
+    let skinPick = null;
+
+    function skinAuraStyle(skin){
+      const c = skin.aura;
+      if(c==="bio") return "linear-gradient(90deg, rgba(32,255,154,.9), rgba(49,215,255,.65))";
+      if(c==="cyan") return "linear-gradient(90deg, rgba(49,215,255,.95), rgba(32,255,154,.75))";
+      if(c==="danger") return "linear-gradient(90deg, rgba(255,47,109,.95), rgba(255,144,99,.85))";
+      if(c==="gold") return "linear-gradient(90deg, rgba(255,213,106,.95), rgba(32,255,154,.85))";
+      return "linear-gradient(90deg, rgba(255,255,255,.10), rgba(255,255,255,.04))";
+    }
+
+    function renderSkins(){
+      renderTop();
+      skinPick = skinById(state.me.skinId);
+      $("skinSelectedName").textContent = skinPick.name;
+      $("skinSelectedRarity").textContent = skinPick.rarity;
+
+      const list = $("skinsList");
+      list.innerHTML = "";
+      SKINS.forEach((s)=>{
+        const it = document.createElement("div");
+        it.className = "item";
+        it.innerHTML = `
+          <div class="left">
+            <div class="badge" style="background:${skinAuraStyle(s)}; border-color: rgba(255,255,255,.14)"></div>
+            <div>
+              <div class="name">${s.name}</div>
+              <div class="sub">${s.rarity} • FX x${s.fx.toFixed(2)}</div>
+            </div>
+          </div>
+          <div class="rank" style="background:${skinAuraStyle(s)}">${s.id === state.me.skinId ? "EQUIP" : "PICK"}</div>
+        `;
+        it.addEventListener("click", ()=>{
+          skinPick = s;
+          $("skinSelectedName").textContent = s.name;
+          $("skinSelectedRarity").textContent = s.rarity;
+          toast(`Выбран: <b>${s.name}</b>`);
+          SFX.tap();
+          // re-render picks
+          renderSkins();
+        }, {passive:true});
+        list.appendChild(it);
+      });
+    }
+
+    // --- Leaderboard screen ---
+    function computeLeaderboard(){
+      // local demo ranking by infectedCount desc
+      const arr = Object.values(state.players || {}).map(p => ({
+        id:p.id,
+        nick:p.nick || "Unknown",
+        skinId:p.skinId || "classic",
+        infectedCount: Number(p.infectedCount||0)
+      }));
+      arr.sort((a,b)=> b.infectedCount - a.infectedCount || a.id.localeCompare(b.id));
+      return arr;
+    }
+
+    function renderLeaderboard(){
+      renderTop();
+      const arr = computeLeaderboard();
+      $("totalPlayers").textContent = String(arr.length);
+      const myIndex = arr.findIndex(x=>x.id===state.me.id);
+      $("youRank").textContent = myIndex>=0 ? `#${myIndex+1}` : "—";
+
+      const list = $("lbList");
+      list.innerHTML = "";
+      arr.slice(0, 30).forEach((p, i)=>{
+        const s = skinById(p.skinId);
+        const it = document.createElement("div");
+        it.className = "item";
+        it.innerHTML = `
+          <div class="left">
+            <div class="badge" style="background:${skinAuraStyle(s)}"></div>
+            <div>
+              <div class="name">${i+1}. ${escapeHtml(p.nick)}</div>
+              <div class="sub mono">${p.id}</div>
+            </div>
+          </div>
+          <div class="rank">${p.infectedCount}</div>
+        `;
+        list.appendChild(it);
+      });
+    }
+
+    function seedBots(){
+      const names = ["GraveRunner","NightBite","ZeroPulse","BioHaze","CyanFang","RotKing","PlagueMuse","VoidEcho","SporeWave","Wasteland"];
+      for(let i=0;i<14;i++){
+        const id = genId();
+        state.players[id] = {
+          id,
+          nick: names[(Math.random()*names.length)|0] + (10 + ((Math.random()*89)|0)),
+          skinId: SKINS[(Math.random()*SKINS.length)|0].id,
+          infectedCount: (Math.random()*40)|0
+        };
+      }
+      // keep me
+      state.players[state.me.id] = packPlayer(state.me);
+      saveState(state);
+      toast("Демо-игроки добавлены");
+      SFX.success();
+      renderLeaderboard();
+    }
+
+    // --- Profile screen ---
+    function normalizeLinks(arr){
+      const out = [];
+      for(const raw of arr){
+        if(!raw) continue;
+        let s = raw.trim();
+        if(!s) continue;
+        if(!/^https?:\/\//i.test(s)) continue;
+        // simple sanitize
+        if(s.length > 120) s = s.slice(0,120);
+        out.push(s);
+        if(out.length>=3) break;
+      }
+      return out;
+    }
+
+    function renderProfile(){
+      renderTop();
+      $("profileId").textContent = state.me.id;
+      $("profileSkin").textContent = skinById(state.me.skinId).name;
+      $("profileRef").textContent = myRefLink(state);
+
+      $("nickInput").value = state.me.nick || "";
+      $("bioInput").value = state.me.bio || "";
+
+      $("link1").value = state.me.links?.[0] || "";
+      $("link2").value = state.me.links?.[1] || "";
+      $("link3").value = state.me.links?.[2] || "";
+    }
+
+    // --- Chat (demo local) ---
+    function addChatMessage(msg){
+      state.chat.push(msg);
+      // cap
+      if(state.chat.length > 80) state.chat = state.chat.slice(-80);
+      saveState(state);
+      renderChat(true);
+    }
+
+    function renderChat(keepScroll=false){
+      renderTop();
+      const list = $("chatList");
+      const atBottom = list.scrollTop + list.clientHeight >= list.scrollHeight - 20;
+      list.innerHTML = "";
+
+      const msgs = state.chat || [];
+      msgs.forEach(m=>{
+        const div = document.createElement("div");
+        const mine = m.fromId === state.me.id;
+        div.className = "msg" + (mine ? " mine" : "");
+        const header = `
+          <div class="h">
+            <b>${escapeHtml(m.fromNick || "Unknown")}</b>
+            <span>${escapeHtml(m.t || "")}</span>
+          </div>
+        `;
+        let body = "";
+        if(m.text){
+          body += `<p>${escapeHtml(m.text)}</p>`;
+        }
+        if(m.audioDataUrl){
+          body += `<audio controls src="${m.audioDataUrl}"></audio>`;
+        }
+        div.innerHTML = header + body;
+        list.appendChild(div);
+      });
+
+      if(keepScroll){
+        if(atBottom) list.scrollTop = list.scrollHeight;
+      }else{
+        list.scrollTop = list.scrollHeight;
+      }
+    }
+
+    // --- Security: no file send, no links in chat ---
+    function sendTextMessage(){
+      const inp = $("chatText");
+      let text = (inp.value || "").trim();
+      if(!text) return;
+
+      const cleaned = stripUrls(text);
+      if(cleaned !== text){
+        toast("Ссылки запрещены в чате — удалено");
+        SFX.danger();
+      }
+      text = cleaned.slice(0, 220);
+
+      addChatMessage({
+        id: cryptoId(),
+        fromId: state.me.id,
+        fromNick: state.me.nick,
+        t: nowTime(),
+        text
+      });
+      inp.value = "";
+      SFX.tap();
+    }
+
+    // --- Voice recording ---
+    let rec = { active:false, mediaRecorder:null, chunks:[], stream:null };
+
+    async function toggleRecord(){
+      if(rec.active){
+        // stop
+        try{ rec.mediaRecorder.stop(); }catch(e){}
+        rec.active = false;
+        $("recDot").style.display = "none";
+        toast("Запись остановлена");
+        SFX.tap();
+        return;
+      }
+
+      // start
+      if(!navigator.mediaDevices?.getUserMedia){
+        toast("Микрофон недоступен");
+        SFX.danger();
+        return;
+      }
+
+      try{
+        rec.stream = await navigator.mediaDevices.getUserMedia({ audio:true });
+        rec.chunks = [];
+        rec.mediaRecorder = new MediaRecorder(rec.stream);
+        rec.mediaRecorder.ondataavailable = (e)=>{ if(e.data && e.data.size>0) rec.chunks.push(e.data); };
+        rec.mediaRecorder.onstop = async ()=>{
+          try{
+            rec.stream?.getTracks()?.forEach(t=>t.stop());
+          }catch(e){}
+          const blob = new Blob(rec.chunks, { type: "audio/webm" });
+          // convert to DataURL for demo storage
+          const dataUrl = await blobToDataURL(blob);
+          addChatMessage({
+            id: cryptoId(),
+            fromId: state.me.id,
+            fromNick: state.me.nick,
+            t: nowTime(),
+            audioDataUrl: dataUrl
+          });
+          SFX.success();
+        };
+        rec.mediaRecorder.start();
+        rec.active = true;
+        $("recDot").style.display = "inline-block";
+        toast("Запись... нажми ещё раз чтобы остановить");
+        SFX.tap();
+      }catch(e){
+        toast("Доступ к микрофону запрещён");
+        SFX.danger();
+      }
+    }
+
+    function blobToDataURL(blob){
+      return new Promise((res)=>{
+        const r = new FileReader();
+        r.onload = ()=>res(r.result);
+        r.readAsDataURL(blob);
+      });
+    }
+
+    // --- Game: simple runner with infection touches ---
+    const G = {
+      running:false,
+      t:0,
+      score:0,
+      combo:1,
+      comboT:0,
+      speed: 3.0,
+      player:{ x:0, y:0, vy:0, r:16, dash:0 },
+      humans:[],
+      particles:[],
+      w:360, h:520,
+      ground: 0,
+      skin: skinById("classic"),
+      lastSpawn:0,
+      lastFrame:0
+    };
+
+    function gameResize(){
+      const c = $("game");
+      const rect = c.getBoundingClientRect();
+      // keep internal resolution based on CSS size for crispness
+      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      c.width  = Math.floor(rect.width * dpr);
+      c.height = Math.floor(rect.height * dpr);
+      G.w = c.width; G.h = c.height;
+      G.ground = Math.floor(G.h * 0.84);
+      // player start
+      G.player.x = Math.floor(G.w*0.22);
+      if(!G.running) G.player.y = G.ground;
+      drawGame();
+    }
+
+    function gameReset(){
+      G.t = 0;
+      G.score = 0;
+      G.combo = 1;
+      G.comboT = 0;
+      G.speed = 3.0;
+      G.humans = [];
+      G.particles = [];
+      G.player.vy = 0;
+      G.player.y = G.ground;
+      G.player.dash = 0;
+      G.lastSpawn = 0;
+      $("scoreNow").textContent = "0";
+      $("comboNow").textContent = "x1";
+    }
+
+    function spawnHuman(){
+      const y = G.ground - 18 - ((Math.random()*60)|0);
+      const x = G.w + 60 + ((Math.random()*220)|0);
+      const type = Math.random() < 0.15 ? "elite" : "normal";
+      const r = type==="elite" ? 15 : 13;
+      G.humans.push({x,y,r,type,hit:false});
+    }
+
+    function burst(x,y, n=10, power=1){
+      for(let i=0;i<n;i++){
+        const a = Math.random()*Math.PI*2;
+        const s = (0.8 + Math.random()*1.8) * power;
+        G.particles.push({
+          x,y, vx: Math.cos(a)*s, vy: Math.sin(a)*s,
+          life: 30 + (Math.random()*20)|0
+        });
+      }
+    }
+
+    function updateGame(){
+      if(!G.running) return;
+      const c = $("game");
+      const ctx = c.getContext("2d");
+      const dt = 1; // fixed step-ish
+
+      G.t += dt;
+
+      // speed ramp
+      G.speed = 3.0 + Math.min(6.5, G.t/420);
+
+      // gravity
+      G.player.vy += 0.55;
+      G.player.y += G.player.vy;
+      if(G.player.y >= G.ground){
+        G.player.y = G.ground;
+        G.player.vy = 0;
+      }
+
+      // dash (hold)
+      if(G.player.dash > 0){
+        G.player.dash -= 1;
+      }
+
+      // spawn humans
+      G.lastSpawn += 1;
+      if(G.lastSpawn > 32 - Math.min(18, (G.t/220)|0)){
+        G.lastSpawn = 0;
+        spawnHuman();
+      }
+
+      // move humans
+      const spd = (G.speed + (G.player.dash>0 ? 2.5 : 0)) * (window.devicePixelRatio||1) * 0.85;
+      for(const h of G.humans){
+        h.x -= spd;
+      }
+      // remove offscreen
+      G.humans = G.humans.filter(h => h.x > -80);
+
+      // collisions
+      for(const h of G.humans){
+        if(h.hit) continue;
+        const dx = (h.x - G.player.x);
+        const dy = (h.y - G.player.y);
+        const dist2 = dx*dx + dy*dy;
+        const rr = (h.r + G.player.r + 3);
+        if(dist2 <= rr*rr){
+          h.hit = true;
+          const add = (h.type==="elite" ? 3 : 1);
+          G.score += add * G.combo;
+          G.combo = Math.min(12, G.combo + (h.type==="elite"?2:1));
+          G.comboT = 70;
+          burst(h.x, h.y, 14 + add*2, 1.2);
+          SFX.tap();
+        }
+      }
+
+      // combo decay
+      if(G.comboT > 0) G.comboT--;
+      else G.combo = Math.max(1, G.combo - 1);
+
+      // particles
+      for(const p of G.particles){
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vx *= 0.985;
+        p.vy *= 0.985;
+        p.life -= 1;
+      }
+      G.particles = G.particles.filter(p => p.life > 0);
+
+      // score UI
+      $("scoreNow").textContent = String(G.score);
+      $("comboNow").textContent = "x" + String(G.combo);
+
+      // fail condition: if player collides with "void" ??? (keep addictive: no fail, but 30s run)
+      // We'll end after 45 seconds to push share.
+      if(G.t >= 45*60){ // 45 seconds at ~60 ticks (rough)
+        endRun();
+      }
+
+      drawGame();
+      requestAnimationFrame(updateGame);
+    }
+
+    function drawGame(){
+      const c = $("game");
+      const ctx = c.getContext("2d");
+      const w = G.w, h = G.h;
+
+      ctx.clearRect(0,0,w,h);
+
+      // background grid glow
+      ctx.save();
+      ctx.globalAlpha = 0.24;
+      ctx.lineWidth = 1;
+      for(let y=0; y<h; y+=Math.floor(h/14)){
+        ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.strokeStyle="rgba(255,255,255,0.10)"; ctx.stroke();
+      }
+      for(let x=0; x<w; x+=Math.floor(w/10)){
+        ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.strokeStyle="rgba(255,255,255,0.08)"; ctx.stroke();
+      }
+      ctx.restore();
+
+      // ground
+      ctx.save();
+      ctx.globalAlpha = 0.55;
+      ctx.beginPath();
+      ctx.roundRect(10, G.ground+18, w-20, h-(G.ground+24), 18);
+      ctx.fillStyle = "rgba(0,0,0,0.35)";
+      ctx.fill();
+      ctx.strokeStyle = "rgba(255,255,255,0.10)";
+      ctx.stroke();
+      ctx.restore();
+
+      // humans
+      for(const hu of G.humans){
+        if(hu.hit) continue;
+        ctx.save();
+        const elite = (hu.type==="elite");
+        ctx.globalAlpha = 0.95;
+        ctx.beginPath();
+        ctx.arc(hu.x, hu.y, hu.r, 0, Math.PI*2);
+        ctx.fillStyle = elite ? "rgba(255,213,106,0.85)" : "rgba(255,255,255,0.70)";
+        ctx.fill();
+        // outline
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = elite ? "rgba(255,213,106,0.35)" : "rgba(255,255,255,0.18)";
+        ctx.stroke();
+        // tiny face dot
+        ctx.beginPath();
+        ctx.arc(hu.x+hu.r*0.25, hu.y-hu.r*0.1, 2, 0, Math.PI*2);
+        ctx.fillStyle = "rgba(0,0,0,0.35)";
+        ctx.fill();
+        ctx.restore();
+      }
+
+      // player (zombie)
+      const s = G.skin;
+      const aura = s.aura;
+      let col = "rgba(32,255,154,0.92)";
+      let glow = "rgba(32,255,154,0.30)";
+      if(aura==="cyan"){ col="rgba(49,215,255,0.92)"; glow="rgba(49,215,255,0.28)"; }
+      if(aura==="danger"){ col="rgba(255,47,109,0.92)"; glow="rgba(255,47,109,0.26)"; }
+      if(aura==="gold"){ col="rgba(255,213,106,0.92)"; glow="rgba(255,213,106,0.24)"; }
+
+      ctx.save();
+      // glow
+      ctx.globalAlpha = 1;
+      ctx.beginPath();
+      ctx.arc(G.player.x, G.player.y, G.player.r*2.2, 0, Math.PI*2);
+      ctx.fillStyle = glow;
+      ctx.fill();
+
+      // core body
+      ctx.beginPath();
+      ctx.arc(G.player.x, G.player.y, G.player.r, 0, Math.PI*2);
+      ctx.fillStyle = col;
+      ctx.fill();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = "rgba(255,255,255,0.22)";
+      ctx.stroke();
+
+      // eye
+      ctx.beginPath();
+      ctx.arc(G.player.x+G.player.r*0.25, G.player.y-G.player.r*0.2, 2.4, 0, Math.PI*2);
+      ctx.fillStyle = "rgba(0,0,0,0.45)";
+      ctx.fill();
+
+      // dash trail
+      if(G.player.dash>0){
+        ctx.globalAlpha = 0.8;
+        ctx.beginPath();
+        ctx.roundRect(G.player.x-80, G.player.y-10, 70, 20, 12);
+        ctx.fillStyle = glow;
+        ctx.fill();
+      }
+
+      ctx.restore();
+
+      // particles
+      ctx.save();
+      for(const p of G.particles){
+        const a = Math.max(0, p.life/50);
+        ctx.globalAlpha = a;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 2.2, 0, Math.PI*2);
+        ctx.fillStyle = glow;
+        ctx.fill();
+      }
+      ctx.restore();
+
+      // overlay timebar
+      ctx.save();
+      ctx.globalAlpha = 0.85;
+      const prog = clamp(G.t/(45*60), 0, 1);
+      ctx.beginPath();
+      ctx.roundRect(12, 12, w-24, 10, 10);
+      ctx.fillStyle = "rgba(0,0,0,0.25)";
+      ctx.fill();
+      ctx.beginPath();
+      ctx.roundRect(12, 12, (w-24)*prog, 10, 10);
+      ctx.fillStyle = col;
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function endRun(){
+      G.running = false;
+
+      // update best
+      const best = Math.max(state.me.bestRun || 0, G.score);
+      state.me.bestRun = best;
+
+      // (optional) convert run score into "infectedCount" reward for fun hook
+      // addictive: every 20 infections in run => +1 infectedCount in leaderboard (local demo)
+      const bonus = Math.floor(G.score / 20);
+      if(bonus > 0){
+        state.players[state.me.id].infectedCount = (state.players[state.me.id].infectedCount || 0) + bonus;
+        state.me.infectedCount = state.players[state.me.id].infectedCount;
+      }
+
+      // save me
+      state.players[state.me.id] = packPlayer(state.me);
+      saveState(state);
+
+      toast(`Забег окончен: <b>${G.score}</b> • Бонус к рангу: <b>+${bonus}</b>`, 2200);
+      SFX.success();
+      renderHome();
+      showScreen("home");
+    }
+
+    function gameStart(fromNav){
+      // setup skin
+      G.skin = skinById(state.me.skinId);
+
+      // resize canvas
+      gameResize();
+
+      if(fromNav){
+        // do not auto run if just opened
+        drawGame();
+        return;
+      }
+      // start run
+      gameReset();
+      G.running = true;
+      requestAnimationFrame(updateGame);
+    }
+
+    function jump(){
+      if(!G.running) return;
+      if(G.player.y >= G.ground){
+        G.player.vy = -12.5;
+        SFX.tap();
+      }
+    }
+    function dash(){
+      if(!G.running) return;
+      G.player.dash = 18;
+      SFX.tap();
+    }
+
+    // touch controls for game
+    (function bindGameControls(){
+      const c = $("game");
+      let holdT = null;
+
+      function onDown(e){
+        e.preventDefault();
+        // start hold timer -> dash
+        holdT = setTimeout(()=>dash(), 130);
+        // quick tap => jump
+        // we trigger jump on up if not hold
+      }
+      function onUp(e){
+        e.preventDefault();
+        if(holdT){
+          clearTimeout(holdT);
+          holdT = null;
+          jump();
+        }
+      }
+      c.addEventListener("touchstart", onDown, {passive:false});
+      c.addEventListener("touchend", onUp, {passive:false});
+      c.addEventListener("mousedown", onDown);
+      window.addEventListener("mouseup", onUp);
+    })();
+
+    window.addEventListener("resize", ()=> {
+      if(q("#screen-game.active")) gameResize();
+    }, {passive:true});
+
+    // --- FX particles background ---
+    const FX = (() => {
+      const canvas = $("fx");
+      const ctx = canvas.getContext("2d");
+      let w=0,h=0, dpr=1;
+      const pts = [];
+      function resize(){
+        const rect = $("app").getBoundingClientRect();
+        dpr = Math.min(2, window.devicePixelRatio||1);
+        canvas.width = Math.floor(rect.width*dpr);
+        canvas.height = Math.floor(rect.height*dpr);
+        w=canvas.width; h=canvas.height;
+        if(pts.length < 80){
+          while(pts.length < 80){
+            pts.push({
+              x: Math.random()*w,
+              y: Math.random()*h,
+              r: 0.8 + Math.random()*2.1,
+              vx: (-0.35 + Math.random()*0.7),
+              vy: (-0.25 + Math.random()*0.5),
+              a: 0.08 + Math.random()*0.16
+            });
+          }
+        }
+      }
+      function tick(){
+        ctx.clearRect(0,0,w,h);
+        ctx.save();
+        for(const p of pts){
+          p.x += p.vx;
+          p.y += p.vy;
+          if(p.x<-20) p.x=w+20;
+          if(p.x>w+20) p.x=-20;
+          if(p.y<-20) p.y=h+20;
+          if(p.y>h+20) p.y=-20;
+
+          ctx.globalAlpha = p.a;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+          ctx.fillStyle = "rgba(255,255,255,1)";
+          ctx.fill();
+        }
+        // subtle glow arcs
+        ctx.globalAlpha = 0.12;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(w*0.22, h*0.30, Math.min(w,h)*0.42, 0, Math.PI*2);
+        ctx.strokeStyle = "rgba(32,255,154,1)";
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(w*0.78, h*0.62, Math.min(w,h)*0.36, 0, Math.PI*2);
+        ctx.strokeStyle = "rgba(49,215,255,1)";
+        ctx.stroke();
+        ctx.restore();
+
+        requestAnimationFrame(tick);
+      }
+      resize();
+      tick();
+      window.addEventListener("resize", resize, {passive:true});
+      return { resize };
+    })();
+
+    // --- Buttons / actions ---
+    function copyToClipboard(text){
+      if(navigator.clipboard?.writeText){
+        return navigator.clipboard.writeText(text);
+      }
+      // fallback
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      ta.remove();
+      return Promise.resolve();
+    }
+
+    async function shareLink(text, url){
+      if(navigator.share){
+        try{
+          await navigator.share({ title:"Viral Link", text, url });
+          return true;
+        }catch(e){ return false; }
+      }
+      return false;
+    }
+
+    $("btnPlay").addEventListener("click", ()=>showScreen("game"));
+    $("btnGameBack").addEventListener("click", ()=>showScreen("home"));
+    $("btnGameRestart").addEventListener("click", ()=>{
+      SFX.tap();
+      showScreen("game");
+      // restart run immediately
+      gameReset();
+      G.running = true;
+      requestAnimationFrame(updateGame);
+    });
+
+    $("btnCopyLink").addEventListener("click", async ()=>{
+      const link = myRefLink(state);
+      await copyToClipboard(link);
+      toast("Скопировано: <b>вирус-ссылка</b>");
+      SFX.success();
+    });
+
+    $("btnShare").addEventListener("click", async ()=>{
+      const link = myRefLink(state);
+      const ok = await shareLink("Зайди по ссылке — и ты заражён 😈", link);
+      if(!ok){
+        await copyToClipboard(link);
+        toast("Share недоступен — ссылка скопирована");
+      }else{
+        toast("Отправлено");
+      }
+      SFX.success();
+    });
+
+    $("btnReset").addEventListener("click", ()=>{
+      localStorage.removeItem(STORE_KEY);
+      toast("Сброшено. Перезагрузи страницу.");
+      SFX.danger();
+      setTimeout(()=>location.reload(), 900);
+    });
+
+    // nav
+    qa(".navBtn").forEach(b=>{
+      b.addEventListener("click", ()=> showScreen(b.dataset.go));
+    });
+
+    // skins save
+    $("btnSaveSkin").addEventListener("click", ()=>{
+      if(!skinPick) return;
+      state.me.skinId = skinPick.id;
+      state.players[state.me.id] = packPlayer(state.me);
+      saveState(state);
+      toast(`Скин сохранён: <b>${skinPick.name}</b>`);
+      SFX.success();
+      renderSkins();
+      renderProfile();
+      renderHome();
+    });
+
+    // leaderboard seed bots
+    $("btnSeedBots").addEventListener("click", seedBots);
+
+    // profile save
+    $("btnSaveProfile").addEventListener("click", ()=>{
+      const nick = ($("nickInput").value||"").trim().slice(0,16) || "PatientZero";
+      const bio = ($("bioInput").value||"").trim().slice(0,220);
+      const links = normalizeLinks([$("link1").value, $("link2").value, $("link3").value]);
+
+      state.me.nick = nick;
+      state.me.bio = bio;
+      state.me.links = links;
+
+      // sync players
+      const p = state.players[state.me.id] || packPlayer(state.me);
+      p.nick = nick;
+      p.skinId = state.me.skinId;
+      state.players[state.me.id] = p;
+
+      saveState(state);
+      toast("Профиль сохранён");
+      SFX.success();
+      renderHome();
+      renderProfile();
+      renderLeaderboard();
+    });
+
+    $("btnCopyProfileRef").addEventListener("click", async ()=>{
+      const link = myRefLink(state);
+      await copyToClipboard(link);
+      toast("Ссылка скопирована");
+      SFX.success();
+    });
+
+    // chat send + voice
+    $("btnSend").addEventListener("click", sendTextMessage);
+    $("chatText").addEventListener("keydown", (e)=>{
+      if(e.key === "Enter"){ e.preventDefault(); sendTextMessage(); }
+    });
+    $("btnRec").addEventListener("click", toggleRecord);
+
+    // --- Crypto-safe IDs for messages ---
+    function cryptoId(){
+      try{
+        const a = new Uint8Array(8);
+        crypto.getRandomValues(a);
+        return Array.from(a).map(x=>x.toString(16).padStart(2,'0')).join('');
+      }catch(e){
+        return String(Math.random()).slice(2);
+      }
+    }
+
+    function escapeHtml(s){
+      return (s||"").replace(/[&<>"']/g, (m)=>({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+      }[m]));
+    }
+
+    // --- Initial render ---
+    // Set a nice default nick if empty
+    if(!state.me.nick) state.me.nick = "PatientZero";
+    // keep infectedCount in player record
+    if(!state.players[state.me.id]) state.players[state.me.id] = packPlayer(state.me);
+    // sync infectedCount from players -> me
+    state.me.infectedCount = state.players[state.me.id].infectedCount || 0;
+    saveState(state);
+
+    renderHome();
+    renderSkins();
+    renderLeaderboard();
+    renderChat();
+    renderProfile();
+
+    // If someone opens without ref param, keep clean URL (optional)
+    // if(getParam("ref") && getParam("ref") === state.me.id) setParam("ref", state.me.id);
+
+    // Avoid sleep for game vibe (best effort)
+    let wakeLock = null;
+    async function tryWakeLock(){
+      try{
+        if('wakeLock' in navigator){
+          wakeLock = await navigator.wakeLock.request('screen');
+        }
+      }catch(e){}
+    }
+    tryWakeLock();
+
+  </script>
+</body>
+</html>
