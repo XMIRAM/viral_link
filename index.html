@@ -1,56 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
 <title>VIRAL LINK</title>
 
 <style>
-/* ================= CORE ================= */
-:root{
-  --bg:#020504;
-  --panel:#0b1512;
-  --glass:rgba(18,36,28,.72);
-  --green:#3CFF9E;
-  --green2:#00e7b3;
-  --text:#eafff4;
-  --muted:rgba(234,255,244,.45);
+/* ================= RESET ================= */
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{
+  height:100%;
+  background:#020504;
+  color:#eafff4;
+  font-family:-apple-system,BlinkMacSystemFont,Inter,sans-serif;
+  overflow:hidden;
 }
 
-*{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,sans-serif}
-html,body{margin:0;padding:0;background:var(--bg);color:var(--text)}
+/* ================= VARIABLES ================= */
+:root{
+  --green:#3cff9e;
+  --green-dim:rgba(60,255,158,.25);
+  --panel:#0b1512;
+  --glass:rgba(18,36,28,.75);
+}
 
 /* ================= INTRO ================= */
 #intro{
-  position:fixed;inset:0;z-index:999;
+  position:fixed;
+  inset:0;
   background:
-    radial-gradient(circle at 50% 30%,#143b2b,#020504 70%);
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  animation:introIn .9s ease;
+    radial-gradient(circle at 50% 30%, #123d2c, #020504 70%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  z-index:10;
+  transition:opacity .6s ease, transform .6s ease;
+}
+#intro.hidden{
+  opacity:0;
+  transform:scale(1.05);
+  pointer-events:none;
 }
 #intro h1{
-  letter-spacing:3px;font-size:36px;margin:0;
+  letter-spacing:4px;
+  font-size:38px;
 }
-#intro p{opacity:.6;margin:12px 0 32px}
+#intro p{
+  opacity:.6;
+  margin:14px 0 34px;
+}
 #intro button{
-  padding:16px 34px;border-radius:18px;
-  border:none;font-weight:900;font-size:15px;
-  background:linear-gradient(135deg,var(--green),var(--green2));
+  padding:16px 36px;
+  border-radius:18px;
+  border:none;
+  font-weight:900;
+  background:linear-gradient(135deg,var(--green),#00e7b3);
   color:#002014;
-  box-shadow:0 0 40px rgba(60,255,158,.45);
+  box-shadow:0 0 40px var(--green-dim);
 }
-@keyframes introIn{from{opacity:0;transform:scale(1.05)}}
 
 /* ================= APP ================= */
-.app{
-  height:100vh;
+#app{
+  height:100%;
   overflow-y:auto;
   scroll-snap-type:y mandatory;
 }
 .section{
-  min-height:100vh;
-  padding:20px;
+  min-height:100%;
+  padding:22px;
   scroll-snap-align:start;
   display:flex;
   flex-direction:column;
@@ -59,35 +77,51 @@ html,body{margin:0;padding:0;background:var(--bg);color:var(--text)}
 /* ================= CARDS ================= */
 .card{
   margin-top:auto;
-  background:linear-gradient(180deg,rgba(24,46,36,.95),rgba(6,12,10,.95));
-  border-radius:30px;
+  background:linear-gradient(180deg,#122720,#060b09);
+  border-radius:28px;
   padding:22px;
   box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.06),
-    0 30px 80px rgba(0,0,0,.75);
+    inset 0 0 0 1px rgba(255,255,255,.05),
+    0 30px 80px rgba(0,0,0,.8);
 }
-.label{font-size:12px;opacity:.5}
-.big{
+.label{
+  font-size:12px;
+  opacity:.45;
+}
+.value{
   margin-top:6px;
-  font-size:22px;font-weight:800;
+  font-size:22px;
+  font-weight:800;
   color:var(--green);
   letter-spacing:1px;
 }
-.row{display:flex;gap:12px;margin-top:18px}
+
+/* ================= STATS ================= */
+.stats{
+  display:flex;
+  gap:12px;
+  margin-top:18px;
+}
 .stat{
-  flex:1;padding:18px;
-  background:rgba(255,255,255,.035);
-  border-radius:20px;
+  flex:1;
+  padding:16px;
+  background:rgba(255,255,255,.04);
+  border-radius:18px;
   text-align:center;
 }
-.stat b{font-size:22px}
-.stat small{opacity:.5}
+.stat b{
+  display:block;
+  font-size:22px;
+}
+.stat small{
+  opacity:.5;
+}
 
 /* ================= PLAY ================= */
 .play{
   margin-top:auto;
   height:260px;
-  border-radius:34px;
+  border-radius:32px;
   background:
     radial-gradient(circle at center,#1a5a3f,#050908);
   display:flex;
@@ -97,36 +131,41 @@ html,body{margin:0;padding:0;background:var(--bg);color:var(--text)}
   letter-spacing:2px;
   box-shadow:
     inset 0 0 0 1px rgba(255,255,255,.06),
-    0 40px 90px rgba(0,0,0,.8);
-  transition:.15s;
+    0 40px 90px rgba(0,0,0,.85);
+  transition:transform .12s ease, box-shadow .12s ease;
 }
 .play:active{
   transform:scale(.97);
-  box-shadow:0 0 60px rgba(60,255,158,.45);
+  box-shadow:0 0 70px var(--green-dim);
 }
 
 /* ================= NAV ================= */
 .nav{
   position:fixed;
-  bottom:0;left:0;right:0;
-  height:76px;
-  background:rgba(6,12,10,.85);
+  bottom:0;
+  left:0;
+  right:0;
+  height:74px;
+  background:rgba(6,12,10,.88);
   backdrop-filter:blur(16px);
   display:flex;
   border-top:1px solid rgba(255,255,255,.06);
 }
 .nav button{
-  flex:1;background:none;border:none;
-  color:var(--green);font-weight:800;
+  flex:1;
+  background:none;
+  border:none;
+  color:var(--green);
+  font-weight:800;
   font-size:12px;
 }
 
-/* ================= MICRO FX ================= */
-.pulse{
-  animation:pulse .4s ease;
+/* ================= FX ================= */
+.bump{
+  animation:bump .3s ease;
 }
-@keyframes pulse{
-  50%{transform:scale(1.15)}
+@keyframes bump{
+  50%{transform:scale(1.18)}
 }
 </style>
 </head>
@@ -137,97 +176,98 @@ html,body{margin:0;padding:0;background:var(--bg);color:var(--text)}
 <div id="intro">
   <h1>VIRAL LINK</h1>
   <p>Turn the link into a virus</p>
-  <button onclick="enter()">ENTER</button>
+  <button id="enterBtn">ENTER</button>
 </div>
 
 <!-- APP -->
-<div class="app" id="app" style="display:none">
+<div id="app">
 
-<!-- STATUS -->
-<section class="section">
-  <h2>INFECTION STATUS</h2>
-  <div class="card">
-    <div class="label">INFECTION ID</div>
-    <div class="big" id="uid"></div>
+  <!-- STATUS -->
+  <section class="section">
+    <h2>INFECTION STATUS</h2>
+    <div class="card">
+      <div class="label">INFECTION ID</div>
+      <div class="value" id="uid"></div>
 
-    <div class="row">
-      <div class="stat">
-        <small>INFECTED</small>
-        <b id="count">0</b>
-      </div>
-      <div class="stat">
-        <small>RANK</small>
-        <b>#--</b>
-      </div>
-      <div class="stat">
-        <small>SKIN</small>
-        <b>CLASSIC</b>
+      <div class="stats">
+        <div class="stat">
+          <small>INFECTED</small>
+          <b id="count">0</b>
+        </div>
+        <div class="stat">
+          <small>RANK</small>
+          <b>#—</b>
+        </div>
+        <div class="stat">
+          <small>SKIN</small>
+          <b>CLASSIC</b>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- PLAY -->
-<section class="section">
-  <h2>PLAY</h2>
-  <div class="play" onclick="infect()">TAP TO INFECT</div>
-</section>
+  <!-- PLAY -->
+  <section class="section">
+    <h2>PLAY</h2>
+    <div class="play" id="playBtn">TAP TO INFECT</div>
+  </section>
 
-<!-- RANKS -->
-<section class="section">
-  <h2>RANKS</h2>
-  <div class="card">Global leaderboard coming online.</div>
-</section>
+  <!-- RANKS -->
+  <section class="section">
+    <h2>RANKS</h2>
+    <div class="card">Global leaderboard (soon).</div>
+  </section>
 
-<!-- CHAT -->
-<section class="section">
-  <h2>CHAT</h2>
-  <div class="card">Text + voice only. Links blocked.</div>
-</section>
-
-<!-- PROFILE -->
-<section class="section">
-  <h2>PROFILE</h2>
-  <div class="card">Bio, links, skins, stats.</div>
-</section>
+  <!-- PROFILE -->
+  <section class="section">
+    <h2>PROFILE</h2>
+    <div class="card">Bio, stats, links.</div>
+  </section>
 
 </div>
 
 <!-- NAV -->
 <div class="nav">
-  <button onclick="go(0)">STATUS</button>
-  <button onclick="go(1)">PLAY</button>
-  <button onclick="go(2)">RANKS</button>
-  <button onclick="go(3)">CHAT</button>
-  <button onclick="go(4)">ME</button>
+  <button data-i="0">STATUS</button>
+  <button data-i="1">PLAY</button>
+  <button data-i="2">RANKS</button>
+  <button data-i="3">ME</button>
 </div>
 
 <script>
-const uid = localStorage.uid || ('VL'+Math.random().toString(36).slice(2,10).toUpperCase());
+/* ================= STATE ================= */
+const uid = localStorage.uid ||
+  ('VL-' + Math.random().toString(36).slice(2,10).toUpperCase());
 localStorage.uid = uid;
+
 let count = +localStorage.count || 0;
 
-document.getElementById('uid').innerText = uid;
-document.getElementById('count').innerText = count;
+/* ================= INIT ================= */
+document.getElementById('uid').textContent = uid;
+document.getElementById('count').textContent = count;
 
-function enter(){
-  document.getElementById('intro').style.display='none';
-  document.getElementById('app').style.display='block';
-}
+/* ================= INTRO ================= */
+document.getElementById('enterBtn').onclick = ()=>{
+  document.getElementById('intro').classList.add('hidden');
+};
 
-function infect(){
+/* ================= PLAY ================= */
+document.getElementById('playBtn').onclick = ()=>{
   count++;
   localStorage.count = count;
   const el = document.getElementById('count');
-  el.innerText = count;
-  el.classList.add('pulse');
-  setTimeout(()=>el.classList.remove('pulse'),300);
-}
+  el.textContent = count;
+  el.classList.add('bump');
+  setTimeout(()=>el.classList.remove('bump'),300);
+};
 
-function go(i){
-  document.querySelectorAll('.section')[i]
-    .scrollIntoView({behavior:'smooth'});
-}
+/* ================= NAV ================= */
+document.querySelectorAll('.nav button').forEach(btn=>{
+  btn.onclick = ()=>{
+    document.querySelectorAll('.section')[btn.dataset.i]
+      .scrollIntoView({behavior:'smooth'});
+  };
+});
 </script>
 
 </body>
