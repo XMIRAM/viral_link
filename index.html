@@ -1,240 +1,222 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>VIRAL LINK — Infection Game</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>VIRAL LINK</title>
 
 <style>
-:root {
-  --bg: #050807;
-  --panel: #0b1411;
-  --green: #3CFF9E;
-  --green-soft: rgba(60,255,158,.15);
-  --red: #ff3c3c;
-  --text: #eafff4;
+:root{
+  --bg:#030706;
+  --panel:#0b1512;
+  --glass:rgba(20,40,32,.55);
+  --green:#3CFF9E;
+  --green2:#00e7b3;
+  --text:#eafff4;
 }
 
-* { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
-
-body {
-  margin: 0;
-  background: radial-gradient(circle at top, #0c1a14, var(--bg));
-  color: var(--text);
-  overflow-x: hidden;
+*{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,sans-serif}
+body{
+  margin:0;
+  background:radial-gradient(circle at top,#0e221a,var(--bg));
+  color:var(--text);
+  overflow-x:hidden;
 }
 
-.screen {
-  min-height: 100vh;
-  padding: 16px;
-  display: none;
+/* ===== INTRO ===== */
+#intro{
+  position:fixed;
+  inset:0;
+  z-index:100;
+  background:radial-gradient(circle at center,#0f2d22,#020504);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  animation:introFade 1s ease forwards;
+}
+#intro h1{
+  font-size:34px;
+  letter-spacing:2px;
+}
+#intro button{
+  margin-top:24px;
+  padding:16px 26px;
+  border-radius:16px;
+  border:none;
+  font-weight:900;
+  background:linear-gradient(135deg,var(--green),var(--green2));
+  box-shadow:0 0 40px rgba(60,255,158,.35);
+}
+@keyframes introFade{
+  from{opacity:0}to{opacity:1}
 }
 
-.screen.active { display: block; }
-
-h1,h2 {
-  margin: 0 0 12px;
-  font-weight: 800;
-  letter-spacing: .5px;
+/* ===== SCROLL APP ===== */
+.app{
+  scroll-snap-type:y mandatory;
+  overflow-y:auto;
+  height:100vh;
+}
+.section{
+  min-height:100vh;
+  padding:20px;
+  scroll-snap-align:start;
+  display:flex;
+  flex-direction:column;
 }
 
-button {
-  width: 100%;
-  padding: 16px;
-  border-radius: 14px;
-  border: none;
-  background: linear-gradient(135deg, var(--green), #1fffca);
-  color: #00140a;
-  font-weight: 900;
-  font-size: 16px;
-  margin: 8px 0;
-  box-shadow: 0 0 30px var(--green-soft);
+/* ===== STATUS CARD ===== */
+.card{
+  margin-top:auto;
+  background:linear-gradient(180deg,rgba(20,40,32,.9),rgba(5,10,8,.9));
+  border-radius:28px;
+  padding:20px;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.06),
+    0 20px 60px rgba(0,0,0,.6);
 }
 
-.panel {
-  background: linear-gradient(180deg, #0f1f19, #08110e);
-  border-radius: 18px;
-  padding: 16px;
-  margin-bottom: 14px;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.05);
+.label{opacity:.5;font-size:12px}
+.big{font-size:22px;font-weight:800;color:var(--green)}
+.row{display:flex;gap:12px;margin-top:14px}
+.stat{
+  flex:1;
+  background:rgba(255,255,255,.03);
+  border-radius:18px;
+  padding:16px;
+  text-align:center;
+}
+.stat b{font-size:22px}
+
+/* ===== PLAY ===== */
+.play{
+  flex:1;
+  border-radius:26px;
+  background:radial-gradient(circle at center,#123d2c,#050908);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);
 }
 
-.nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #060b09;
-  display: flex;
-  border-top: 1px solid rgba(255,255,255,.05);
+/* ===== NAV ===== */
+.nav{
+  position:fixed;
+  bottom:0;left:0;right:0;
+  height:70px;
+  background:rgba(6,12,10,.9);
+  backdrop-filter:blur(12px);
+  display:flex;
+  border-top:1px solid rgba(255,255,255,.06);
 }
-
-.nav button {
-  flex: 1;
-  border-radius: 0;
-  background: none;
-  color: var(--green);
-  box-shadow: none;
-}
-
-/* GAME */
-.game {
-  position: relative;
-  height: 260px;
-  border-radius: 18px;
-  background: radial-gradient(circle at center, #0e2b20, #050a08);
-  overflow: hidden;
-}
-
-.zombie {
-  position: absolute;
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: var(--green);
-  box-shadow: 0 0 20px var(--green);
-}
-
-/* CHAT */
-.chat-box {
-  max-height: 220px;
-  overflow-y: auto;
-  font-size: 14px;
-}
-
-.chat-msg {
-  margin-bottom: 6px;
-  opacity: .9;
-}
-
-input, textarea {
-  width: 100%;
-  background: #040908;
-  color: var(--text);
-  border: 1px solid rgba(255,255,255,.08);
-  border-radius: 10px;
-  padding: 12px;
-  margin-top: 8px;
+.nav button{
+  flex:1;
+  background:none;
+  border:none;
+  color:var(--green);
+  font-weight:700;
 }
 </style>
 </head>
 
 <body>
 
-<!-- HOME -->
-<div class="screen active" id="home">
-  <h1>🧬 VIRAL LINK</h1>
-  <p>Turn the link into a virus. Infect the world.</p>
-
-  <div class="panel">
-    <b>Your Infection ID:</b>
-    <div id="uid"></div>
-    <small>Infected: <span id="infected">0</span></small>
-    <button onclick="copyLink()">Copy Viral Link</button>
-  </div>
-
-  <button onclick="go('game')">🧟 Infect (Game)</button>
+<!-- INTRO -->
+<div id="intro">
+  <h1>VIRAL LINK</h1>
+  <p>Turn the link into a virus</p>
+  <button onclick="start()">ENTER</button>
 </div>
 
-<!-- GAME -->
-<div class="screen" id="game">
-  <h2>Tap to Infect</h2>
-  <div class="game" id="gameBox"></div>
-  <button onclick="spawn()">Spawn Zombie</button>
-</div>
+<!-- APP -->
+<div class="app" id="app" style="display:none">
 
-<!-- LEADERBOARD -->
-<div class="screen" id="board">
-  <h2>🏆 Leaderboard</h2>
-  <div class="panel" id="leaders"></div>
-</div>
+  <!-- STATUS -->
+  <section class="section">
+    <h2>INFECTION STATUS</h2>
 
-<!-- PROFILE -->
-<div class="screen" id="profile">
-  <h2>👤 Profile</h2>
-  <textarea id="bio" placeholder="Your bio (links allowed here)"></textarea>
-  <button onclick="saveBio()">Save</button>
-</div>
+    <div class="card">
+      <div class="label">INFECTION ID</div>
+      <div class="big" id="uid"></div>
 
-<!-- CHAT -->
-<div class="screen" id="chat">
-  <h2>💬 Global Chat</h2>
-  <div class="panel chat-box" id="chatBox"></div>
-  <input id="msg" placeholder="Text only. Links blocked." />
-  <button onclick="sendMsg()">Send</button>
+      <div class="row">
+        <div class="stat">
+          <div class="label">INFECTED</div>
+          <b id="count">0</b>
+        </div>
+        <div class="stat">
+          <div class="label">RANK</div>
+          <b>#--</b>
+        </div>
+        <div class="stat">
+          <div class="label">SKIN</div>
+          <b>CLASSIC</b>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLAY -->
+  <section class="section">
+    <h2>PLAY</h2>
+    <div class="play" onclick="infect()">TAP TO INFECT</div>
+  </section>
+
+  <!-- RANKS -->
+  <section class="section">
+    <h2>RANKS</h2>
+    <div class="card">Global infection leaderboard soon.</div>
+  </section>
+
+  <!-- CHAT -->
+  <section class="section">
+    <h2>CHAT</h2>
+    <div class="card">Text + voice only. No links.</div>
+  </section>
+
+  <!-- PROFILE -->
+  <section class="section">
+    <h2>PROFILE</h2>
+    <div class="card">Bio, links, skins.</div>
+  </section>
+
 </div>
 
 <!-- NAV -->
 <div class="nav">
-  <button onclick="go('home')">Home</button>
-  <button onclick="go('board')">Rank</button>
-  <button onclick="go('chat')">Chat</button>
-  <button onclick="go('profile')">Me</button>
+  <button onclick="scrollToSec(0)">Status</button>
+  <button onclick="scrollToSec(1)">Play</button>
+  <button onclick="scrollToSec(2)">Ranks</button>
+  <button onclick="scrollToSec(3)">Chat</button>
+  <button onclick="scrollToSec(4)">Me</button>
 </div>
 
 <script>
-const uid = localStorage.uid || ('INF-' + Math.random().toString(36).slice(2,8).toUpperCase());
+const uid = localStorage.uid || ('VL'+Math.random().toString(36).slice(2,10).toUpperCase());
 localStorage.uid = uid;
-
-let infected = +localStorage.infected || 0;
-let bio = localStorage.bio || "";
+let count = +localStorage.count || 0;
 
 document.getElementById('uid').innerText = uid;
-document.getElementById('infected').innerText = infected;
-document.getElementById('bio').value = bio;
+document.getElementById('count').innerText = count;
 
-function go(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+function start(){
+  document.getElementById('intro').style.display='none';
+  document.getElementById('app').style.display='block';
 }
 
-function copyLink(){
-  navigator.clipboard.writeText(location.href + '?ref=' + uid);
-  alert('Viral link copied');
+function infect(){
+  count++;
+  localStorage.count = count;
+  document.getElementById('count').innerText = count;
 }
 
-function spawn(){
-  const z = document.createElement('div');
-  z.className = 'zombie';
-  z.style.left = Math.random()*220+'px';
-  z.style.top = Math.random()*180+'px';
-  z.onclick = ()=>{
-    infected++;
-    localStorage.infected = infected;
-    document.getElementById('infected').innerText = infected;
-    z.remove();
-    updateLeaders();
-  }
-  document.getElementById('gameBox').appendChild(z);
-}
-
-function updateLeaders(){
-  let data = JSON.parse(localStorage.leaders||'{}');
-  data[uid]=infected;
-  localStorage.leaders = JSON.stringify(data);
-
-  let html='';
-  Object.entries(data).sort((a,b)=>b[1]-a[1]).slice(0,10)
-    .forEach(([u,c],i)=>html+=`<div>${i+1}. ${u} — ${c}</div>`);
-  document.getElementById('leaders').innerHTML = html;
-}
-updateLeaders();
-
-function saveBio(){
-  bio = document.getElementById('bio').value;
-  localStorage.bio = bio;
-  alert('Saved');
-}
-
-function sendMsg(){
-  const t = document.getElementById('msg');
-  if(/http|www|\./i.test(t.value)) return alert('Links forbidden');
-  const div = document.createElement('div');
-  div.className='chat-msg';
-  div.innerText = uid+': '+t.value;
-  document.getElementById('chatBox').appendChild(div);
-  t.value='';
+function scrollToSec(i){
+  document.querySelectorAll('.section')[i]
+    .scrollIntoView({behavior:'smooth'});
 }
 </script>
+
 </body>
 </html>
